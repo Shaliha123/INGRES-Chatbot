@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base - INGRES</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .kb-search-hero {
+            background: var(--bg-dark);
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .kb-search-box {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 1rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 16px;
+        }
+        .kb-search-box input {
+            flex: 1;
+            border: none;
+            padding: 0.8rem 1rem;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+        .kb-categories {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+            justify-content: center;
+        }
+        .category-chip {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .category-chip.active, .category-chip:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .kb-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .article-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        .article-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .article-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        .article-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="app-layout">
+    <aside class="app-sidebar">
+        <a href="index.html" class="logo" style="color: white; margin-bottom: 3rem;">
+            <div class="logo-icon" style="background: var(--primary);">
+                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
+            INGRES
+        </a>
+        <nav style="flex: 1;">
+            <a href="dashboard.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span data-i18n="dashboard">Dashboard</span>
+            </a>
+            <a href="chat.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <span data-i18n="chat">Chat</span>
+            </a>
+            <a href="knowledge.html" class="app-nav-item active">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span data-i18n="knowledge">Knowledge Base</span>
+            </a>
+            <a href="documents.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span data-i18n="documents">Documents</span>
+            </a>
+            <a href="history.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span data-i18n="history">History</span>
+            </a>
+            <a href="analytics.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span data-i18n="analytics">Analytics</span>
+            </a>
+        </nav>
+        <div style="border-top: 1px solid #1e293b; padding-top: 1.5rem;">
+            <a href="settings.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span data-i18n="settings">Settings</span>
+            </a>
+            <a href="profile.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span data-i18n="profile">Profile</span>
+            </a>
+            <a href="#" id="logout-btn" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span data-i18n="logout">Logout</span>
+            </a>
+
+    <main class="app-main">
+        <div class="kb-search-hero">
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;">How can we help you?</h1>
+            <p style="opacity: 0.8;">Search the INGRES Knowledge Base for rules, policies, and manuals.</p>
+            <div class="kb-search-box">
+                <input type="text" placeholder="Search for articles, keywords, or topics...">
+                <button class="btn btn-register">Search</button>
+            </div>
+        </div>
+
+        <div class="kb-categories">
+            <div class="category-chip active">All Topics</div>
+            <div class="category-chip">Rules & Policies</div>
+            <div class="category-chip">Guidelines</div>
+            <div class="category-chip">User Manuals</div>
+            <div class="category-chip">Circulars</div>
+            <div class="category-chip">Training</div>
+        </div>
+
+        <div class="kb-grid">
+            <div class="article-card">
+                <span class="article-tag">Policies</span>
+                <h3>Security Compliance 2024</h3>
+                <p>An overview of the updated data security and privacy protocols for the INGRES platform.</p>
+                <a href="#" style="color: var(--primary); font-weight: 700;">Read Article →</a>
+            </div>
+            <div class="article-card">
+                <span class="article-tag">Manuals</span>
+                <h3>Getting Started Guide</h3>
+                <p>Everything you need to know about setting up your account and using the AI assistant.</p>
+                <a href="#" style="color: var(--primary); font-weight: 700;">Read Article →</a>
+            </div>
+            <div class="article-card">
+                <span class="article-tag">Rules</span>
+                <h3>Usage Guidelines</h3>
+                <p>Important rules regarding acceptable use and organization-wide interaction policies.</p>
+                <a href="#" style="color: var(--primary); font-weight: 700;">Read Article →</a>
+            </div>
+            <div class="article-card">
+                <span class="article-tag">Circulars</span>
+                <h3>Maintenance Update v2.1</h3>
+                <p>Details about the upcoming system maintenance and performance optimizations scheduled for next week.</p>
+                <a href="#" style="color: var(--primary); font-weight: 700;">Read Article →</a>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut } from './js/auth.js';
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+        });
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await signOut(auth);
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

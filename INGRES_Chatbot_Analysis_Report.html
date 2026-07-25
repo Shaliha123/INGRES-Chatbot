@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INGRES Chatbot — Complete Project Analysis Report</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-dark: #3730a3;
+            --red: #ef4444;
+            --red-light: #fef2f2;
+            --yellow: #f59e0b;
+            --yellow-light: #fffbeb;
+            --green: #10b981;
+            --green-light: #ecfdf5;
+            --blue: #3b82f6;
+            --blue-light: #eff6ff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-800);
+            line-height: 1.7;
+            background: #f0f2f5;
+        }
+
+        /* ============ COVER PAGE ============ */
+        .cover-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #312e81 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+            page-break-after: always;
+        }
+
+        .cover-page::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79,70,229,0.3), transparent 70%);
+            top: -200px;
+            right: -200px;
+        }
+
+        .cover-page::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59,130,246,0.2), transparent 70%);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .cover-badge {
+            background: rgba(79,70,229,0.2);
+            border: 1px solid rgba(79,70,229,0.4);
+            color: #a5b4fc;
+            padding: 0.5rem 1.5rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+
+        .cover-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .cover-title span {
+            background: linear-gradient(135deg, #818cf8, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cover-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 3.5rem;
+            z-index: 1;
+        }
+
+        .cover-meta {
+            display: flex;
+            gap: 3rem;
+            z-index: 1;
+        }
+
+        .cover-meta-item {
+            text-align: center;
+            color: white;
+        }
+
+        .cover-meta-item .label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-400);
+            margin-bottom: 0.4rem;
+        }
+
+        .cover-meta-item .value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cover-robot {
+            margin-top: 3rem;
+            z-index: 1;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .report-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .page {
+            padding: 3.5rem 4rem;
+        }
+
+        /* ============ SECTION HEADERS ============ */
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-right: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        h1.section-title {
+            display: flex;
+            align-items: center;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--gray-600);
+            font-size: 0.95rem;
+        }
+
+        /* ============ TOC ============ */
+        .toc {
+            padding: 3rem 4rem;
+            page-break-after: always;
+        }
+
+        .toc h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            color: var(--gray-900);
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px dashed var(--gray-200);
+            font-size: 0.95rem;
+        }
+
+        .toc-item:hover {
+            background: var(--gray-50);
+        }
+
+        .toc-item .toc-num {
+            font-weight: 800;
+            color: var(--primary);
+            margin-right: 1rem;
+            min-width: 32px;
+        }
+
+        .toc-item .toc-label {
+            flex: 1;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .toc-item .toc-page {
+            font-weight: 700;
+            color: var(--gray-400);
+        }
+
+        /* ============ TABLES ============ */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            font-size: 0.88rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        th {
+            background: var(--gray-900);
+            color: white;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        tr:nth-child(even) td {
+            background: var(--gray-50);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ============ ALERT BOXES ============ */
+        .alert {
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-critical {
+            background: var(--red-light);
+            border-left: 4px solid var(--red);
+        }
+
+        .alert-critical .alert-title { color: var(--red); }
+
+        .alert-warning {
+            background: var(--yellow-light);
+            border-left: 4px solid var(--yellow);
+        }
+
+        .alert-warning .alert-title { color: #b45309; }
+
+        .alert-info {
+            background: var(--blue-light);
+            border-left: 4px solid var(--blue);
+        }
+
+        .alert-info .alert-title { color: var(--blue); }
+
+        .alert-success {
+            background: var(--green-light);
+            border-left: 4px solid var(--green);
+        }
+
+        .alert-success .alert-title { color: var(--green); }
+
+        .alert-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.3rem;
+        }
+
+        .alert-text {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* ============ BADGES ============ */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-red { background: #fee2e2; color: #dc2626; }
+        .badge-yellow { background: #fef3c7; color: #d97706; }
+        .badge-green { background: #d1fae5; color: #059669; }
+        .badge-blue { background: #dbeafe; color: #2563eb; }
+        .badge-gray { background: var(--gray-100); color: var(--gray-500); }
+
+        /* ============ STAT CARDS ============ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stat-card .stat-sub {
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            font-weight: 600;
+        }
+
+        /* ============ CODE BLOCK ============ */
+        .code-block {
+            background: var(--gray-900);
+            color: #e2e8f0;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block .comment { color: #6b7280; }
+        .code-block .keyword { color: #c084fc; }
+        .code-block .string { color: #86efac; }
+        .code-block .function { color: #93c5fd; }
+
+        /* ============ TREE STRUCTURE ============ */
+        .tree {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            color: var(--gray-600);
+            margin: 1rem 0;
+        }
+
+        .tree .folder { color: var(--primary); font-weight: 700; }
+        .tree .file { color: var(--gray-500); }
+        .tree .note { color: var(--gray-400); font-style: italic; }
+
+        /* ============ FEATURE STATUS TABLE ============ */
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.4rem;
+        }
+
+        .dot-red { background: var(--red); }
+        .dot-green { background: var(--green); }
+        .dot-yellow { background: var(--yellow); }
+
+        /* ============ SCORECARD ============ */
+        .scorecard {
+            margin: 2rem 0;
+        }
+
+        .score-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .score-label {
+            width: 180px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--gray-700);
+        }
+
+        .score-bar-bg {
+            flex: 1;
+            height: 12px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .score-value {
+            width: 55px;
+            text-align: right;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        /* ============ OVERALL SCORE ============ */
+        .overall-score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            background: linear-gradient(135deg, var(--gray-900), #312e81);
+            color: white;
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .overall-score .big-number {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overall-score .big-total {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--gray-400);
+        }
+
+        .overall-score .big-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            margin-top: 0.5rem;
+        }
+
+        .overall-score .verdict {
+            font-size: 1.1rem;
+            max-width: 350px;
+            text-align: left;
+            color: var(--gray-300);
+            line-height: 1.6;
+        }
+
+        .overall-score .verdict strong {
+            color: white;
+        }
+
+        /* ============ PRIORITY CARDS ============ */
+        .priority-card {
+            border-radius: 16px;
+            padding: 1.75rem;
+            margin: 1.5rem 0;
+            border: 1px solid;
+        }
+
+        .priority-card.critical {
+            background: linear-gradient(135deg, #fef2f2, #fff1f2);
+            border-color: #fecaca;
+        }
+
+        .priority-card.important {
+            background: linear-gradient(135deg, #fffbeb, #fefce8);
+            border-color: #fde68a;
+        }
+
+        .priority-card.nice {
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+            border-color: #a7f3d0;
+        }
+
+        .priority-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .priority-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .priority-card.critical .priority-icon { background: #fee2e2; }
+        .priority-card.important .priority-icon { background: #fef3c7; }
+        .priority-card.nice .priority-icon { background: #d1fae5; }
+
+        .priority-title {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .priority-card.critical .priority-title { color: #dc2626; }
+        .priority-card.important .priority-title { color: #d97706; }
+        .priority-card.nice .priority-title { color: #059669; }
+
+        .priority-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .priority-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .priority-list li::before {
+            content: '→';
+            color: var(--gray-400);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ============ ROADMAP ============ */
+        .roadmap {
+            margin: 2rem 0;
+        }
+
+        .phase {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 0;
+        }
+
+        .phase-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40px;
+            flex-shrink: 0;
+        }
+
+        .phase-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .phase-connector {
+            width: 3px;
+            flex: 1;
+            min-height: 20px;
+        }
+
+        .phase-content {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        .phase-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.3rem;
+        }
+
+        .phase-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-tasks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .phase-task {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+
+        /* ============ DIFF BLOCK ============ */
+        .diff-block {
+            background: var(--gray-900);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .diff-remove {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.1);
+            display: block;
+            padding: 0 0.5rem;
+            margin: 0 -0.5rem;
+        }
+
+        .diff-add {
+            color: #86efac;
+            background: rgba(16, 185, 129, 0.1);
+            display: block;
+            padding: 0 0.5rem;
+            margin: 0 -0.5rem;
+        }
+
+        /* ============ CHART VISUALS ============ */
+        .chart-container {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .donut-chart {
+            position: relative;
+            width: 160px;
+            height: 160px;
+        }
+
+        .donut-chart svg {
+            transform: rotate(-90deg);
+        }
+
+        .donut-chart .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .donut-chart .center-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--gray-800);
+        }
+
+        .donut-chart .center-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--gray-400);
+            text-transform: uppercase;
+        }
+
+        .bar-chart {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .bar-label {
+            width: 110px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-align: right;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 20px;
+            background: var(--gray-100);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: white;
+            min-width: fit-content;
+        }
+
+        /* ============ FOOTER ============ */
+        .report-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.8rem;
+            color: var(--gray-400);
+        }
+
+        /* ============ PRINT STYLES ============ */
+        @media print {
+            body { background: white; }
+            .report-container { box-shadow: none; max-width: 100%; }
+            .page { padding: 2rem 2.5rem; }
+            .cover-page { min-height: 100vh; }
+            @page { margin: 10mm; size: A4; }
+            .no-print { display: none !important; }
+            .section-divider { display: none !important; }
+            .page-break { page-break-before: always; }
+        }
+
+        /* ============ PRINT BUTTON ============ */
+        .print-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gray-900);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+        }
+
+        .print-bar p {
+            color: var(--gray-400);
+            margin: 0;
+            font-size: 0.85rem;
+        }
+
+        .print-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .print-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.03);
+        }
+
+        /* bottom spacing for print bar */
+        .bottom-spacer {
+            height: 80px;
+        }
+
+        /* ============ SECTION DIVIDER ============ */
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--blue), var(--primary));
+            border-radius: 2px;
+            margin: 0;
+        }
+
+        /* list styling */
+        ul.styled-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 1rem;
+        }
+
+        ul.styled-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            padding: 0.35rem 0;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        ul.styled-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 1.2rem;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        .highlight-box {
+            background: var(--primary-light);
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            color: var(--primary-dark);
+            margin: 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================== COVER PAGE ======================== -->
+    <div class="cover-page">
+        <div class="cover-badge">Technical Analysis Report • 2026</div>
+        <h1 class="cover-title">Development of an <span>AI-driven ChatBOT</span> for INGRES as a Virtual Assistant</h1>
+        <p class="cover-subtitle">A comprehensive structural, logical, and technical analysis of the INGRES Chatbot project with improvement recommendations</p>
+
+        <div class="cover-meta">
+            <div class="cover-meta-item">
+                <div class="label">Project</div>
+                <div class="value">INGRES Chatbot</div>
+            </div>
+            <div class="cover-meta-item">
+                <div class="label">Files Analyzed</div>
+                <div class="value">24 Files</div>
+            </div>
+            <div class="cover-meta-item">
+                <div class="label">Date</div>
+                <div class="value">July 24, 2026</div>
+            </div>
+            <div class="cover-meta-item">
+                <div class="label">Score</div>
+                <div class="value" style="color: #f87171;">2.1 / 10</div>
+            </div>
+        </div>
+
+        <div class="cover-robot">
+            <svg width="120" height="120" viewBox="0 0 500 500">
+                <circle cx="250" cy="250" r="180" fill="rgba(255,255,255,0.05)" />
+                <rect x="170" y="180" width="160" height="140" rx="45" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                <rect x="190" y="200" width="120" height="80" rx="35" fill="#1e293b" />
+                <circle cx="225" cy="240" r="10" fill="#818cf8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="275" cy="240" r="10" fill="#818cf8">
+                    <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <rect x="150" y="225" width="20" height="50" rx="10" fill="rgba(255,255,255,0.08)" />
+                <rect x="330" y="225" width="20" height="50" rx="10" fill="rgba(255,255,255,0.08)" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="report-container">
+
+        <!-- ======================== TABLE OF CONTENTS ======================== -->
+        <div class="toc">
+            <h1>Table of Contents</h1>
+            <div class="toc-item"><span class="toc-num">01</span><span class="toc-label">Project Overview & Application Theme</span></div>
+            <div class="toc-item"><span class="toc-num">02</span><span class="toc-label">Structural Analysis & Issues</span></div>
+            <div class="toc-item"><span class="toc-num">03</span><span class="toc-label">Logical Analysis & Issues</span></div>
+            <div class="toc-item"><span class="toc-num">04</span><span class="toc-label">Technical Analysis & Issues</span></div>
+            <div class="toc-item"><span class="toc-num">05</span><span class="toc-label">Improvement Recommendations</span></div>
+            <div class="toc-item"><span class="toc-num">06</span><span class="toc-label">Summary Scorecard & Overall Assessment</span></div>
+            <div class="toc-item"><span class="toc-num">07</span><span class="toc-label">Recommended Action Plan & Roadmap</span></div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 1: OVERVIEW ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">1</span> Project Overview & Application Theme</h1>
+
+            <p><strong>INGRES</strong> stands for <strong>Integrated Groundwater Information Retrieval System</strong>. This project is a client-side web application that serves as an AI-driven virtual assistant to help users query groundwater-related data — including water levels, water quality, borewell information, rainfall data, aquifer details, recharge methods, and government schemes.</p>
+
+            <h2>1.1 Application Scope at a Glance</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--primary);">24</div>
+                    <div class="stat-label">Total Files</div>
+                    <div class="stat-sub" style="color: var(--gray-400);">HTML, CSS, JS</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--red);">0</div>
+                    <div class="stat-label">Backend Endpoints</div>
+                    <div class="stat-sub" style="color: var(--red);">No server exists</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--red);">0</div>
+                    <div class="stat-label">AI Models</div>
+                    <div class="stat-sub" style="color: var(--red);">Keyword matching only</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--green);">3</div>
+                    <div class="stat-label">Languages</div>
+                    <div class="stat-sub" style="color: var(--green);">EN, HI, TA (partial)</div>
+                </div>
+            </div>
+
+            <h2>1.2 Technology Stack</h2>
+            <table>
+                <thead>
+                    <tr><th>Aspect</th><th>Detail</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Domain</strong></td><td>Groundwater Information Retrieval (INGRES)</td><td><span class="badge badge-green">Defined</span></td></tr>
+                    <tr><td><strong>Type</strong></td><td>Static multi-page HTML/CSS/JS web application</td><td><span class="badge badge-yellow">No framework</span></td></tr>
+                    <tr><td><strong>Authentication</strong></td><td>Firebase Authentication (Email/Password)</td><td><span class="badge badge-green">Working</span></td></tr>
+                    <tr><td><strong>AI Engine</strong></td><td>None — uses hardcoded keyword-matching</td><td><span class="badge badge-red">Missing</span></td></tr>
+                    <tr><td><strong>Backend / API</strong></td><td>None — fully client-side</td><td><span class="badge badge-red">Missing</span></td></tr>
+                    <tr><td><strong>Database</strong></td><td>None — all data is static/hardcoded</td><td><span class="badge badge-red">Missing</span></td></tr>
+                    <tr><td><strong>Pages</strong></td><td>20+ HTML pages (landing, chat, dashboard, admin, etc.)</td><td><span class="badge badge-blue">UI Built</span></td></tr>
+                    <tr><td><strong>i18n</strong></td><td>Basic support for English, Hindi, Tamil (sidebar only)</td><td><span class="badge badge-yellow">Partial</span></td></tr>
+                </tbody>
+            </table>
+
+            <h2>1.3 File Inventory</h2>
+            <table>
+                <thead>
+                    <tr><th>File</th><th>Purpose</th><th>Size</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>index.html</strong></td><td>Landing page with floating chat widget</td><td>22.7 KB</td></tr>
+                    <tr><td><strong>chat.html</strong></td><td>Full-page chat interface</td><td>18.2 KB</td></tr>
+                    <tr><td><strong>dashboard.html</strong></td><td>User dashboard with stats</td><td>14.7 KB</td></tr>
+                    <tr><td><strong>knowledge.html</strong></td><td>Knowledge base articles</td><td>10.5 KB</td></tr>
+                    <tr><td><strong>documents.html</strong></td><td>Document management</td><td>11.2 KB</td></tr>
+                    <tr><td><strong>analytics.html</strong></td><td>Analytics charts</td><td>10.4 KB</td></tr>
+                    <tr><td><strong>admin.html</strong></td><td>Admin console</td><td>9.1 KB</td></tr>
+                    <tr><td><strong>settings.html</strong></td><td>User settings</td><td>10.6 KB</td></tr>
+                    <tr><td><strong>profile.html</strong></td><td>User profile</td><td>8.9 KB</td></tr>
+                    <tr><td><strong>style.css</strong></td><td>Global stylesheet</td><td>27.2 KB</td></tr>
+                    <tr><td><strong>script.js</strong></td><td>Legacy monolithic script</td><td>12.1 KB</td></tr>
+                    <tr><td><strong>js/auth.js</strong></td><td>Firebase auth initialization</td><td>695 B</td></tr>
+                    <tr><td><strong>js/firebase-config.js</strong></td><td>Firebase credentials</td><td>396 B</td></tr>
+                    <tr><td><strong>js/theme.js</strong></td><td>Theme & language management</td><td>2.5 KB</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 2: STRUCTURAL ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">2</span> Structural Analysis & Issues</h1>
+
+            <h2>2.1 No Backend Architecture — The Fundamental Gap</h2>
+
+            <div class="alert alert-critical">
+                <div class="alert-icon">🚨</div>
+                <div>
+                    <div class="alert-title">Critical: No Backend Server</div>
+                    <div class="alert-text">The project has <strong>NO backend server, NO API layer, and NO database</strong>. The application title promises an "AI-driven ChatBOT" but there is zero AI integration. All chatbot responses are hardcoded keyword-matching arrays duplicated across multiple files.</div>
+                </div>
+            </div>
+
+            <h2>2.2 Massive Code Duplication</h2>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">⚠️</div>
+                <div>
+                    <div class="alert-title">Warning: Sidebar Duplicated 8× Times</div>
+                    <div class="alert-text">The sidebar navigation HTML is copy-pasted identically across 8+ files. Any sidebar change requires editing every single file manually.</div>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr><th>Duplicated Element</th><th>Across</th><th>Lines Duplicated</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Sidebar navigation</td><td>8 app pages</td><td><strong>~400 lines</strong></td></tr>
+                    <tr><td>Auth check + logout script</td><td>8 app pages</td><td>~120 lines</td></tr>
+                    <tr><td>Chatbot response arrays</td><td>index.html + chat.html</td><td>~120 lines</td></tr>
+                    <tr><td>Robot SVG illustration</td><td>4 pages</td><td>~80 lines</td></tr>
+                    <tr><td>Google Fonts link tag</td><td>Every HTML file</td><td>20+ occurrences</td></tr>
+                </tbody>
+            </table>
+
+            <h2>2.3 No Component Architecture</h2>
+            <p>The project uses raw multi-page HTML with <strong>no templating or component system</strong>:</p>
+            <ul class="styled-list">
+                <li>No HTML partials or includes</li>
+                <li>No framework (React, Vue, Angular, etc.)</li>
+                <li>No static site generator (Hugo, Eleventy, etc.)</li>
+                <li>No build system at all (no <code>package.json</code>, no build tool)</li>
+            </ul>
+
+            <h2>2.4 Disorganized File Structure</h2>
+            <div class="tree">
+<span class="folder">ai/</span>
+├── <span class="folder">.idea/</span>              <span class="note">← IDE config (should be gitignored)</span>
+├── <span class="folder">js/</span>
+│   ├── <span class="file">auth.js</span>
+│   ├── <span class="file">env-check.js</span>
+│   ├── <span class="file">firebase-config.js</span>
+│   └── <span class="file">theme.js</span>
+├── <span class="file">script.js</span>           <span class="note">← Root-level JS (inconsistent with js/ folder)</span>
+├── <span class="file">style.css</span>           <span class="note">← Single 1335-line monolithic stylesheet</span>
+├── <span class="file">index.html</span>
+├── <span class="file">chat.html</span>
+├── <span class="file">dashboard.html</span>
+└── <span class="note">... (18 more HTML files flat in one directory)</span>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 3: LOGICAL ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">3</span> Logical Analysis & Issues</h1>
+
+            <h2>3.1 The Chatbot Is NOT AI-Driven</h2>
+
+            <div class="alert alert-critical">
+                <div class="alert-icon">🤖</div>
+                <div>
+                    <div class="alert-title">Critical: No AI — Simple Keyword Matching</div>
+                    <div class="alert-text">The core feature of the project — the AI chatbot — is a simple keyword matcher, not an AI system. It can only recognize ~15 predefined keyword patterns and cannot understand context, typos, synonyms, or generate new responses.</div>
+                </div>
+            </div>
+
+            <div class="code-block">
+<span class="comment">// Current "AI" logic — simple keyword matching (chat.html)</span>
+<span class="keyword">const</span> match = chatResponses.<span class="function">find</span>(item =>
+    item.keywords.<span class="function">some</span>(keyword => lowerText.<span class="function">includes</span>(keyword))
+);
+
+<span class="keyword">if</span> (match) {
+    aiResponse = match.response;  <span class="comment">// Returns hardcoded text</span>
+} <span class="keyword">else</span> {
+    aiResponse = <span class="string">"I'm not sure I understand..."</span>;
+}
+            </div>
+
+            <h2>3.2 Fake / Simulated Features</h2>
+            <p>Multiple features are visually present in the UI but are completely non-functional:</p>
+
+            <table>
+                <thead>
+                    <tr><th>Feature</th><th>Status</th><th>Evidence</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Voice Input</strong></td><td><span class="badge badge-red">Fake</span></td><td>Injects a hardcoded string after 3 seconds</td></tr>
+                    <tr><td><strong>PDF Download</strong></td><td><span class="badge badge-red">Fake</span></td><td>Creates plain text with <code>.pdf</code> extension — not a real PDF</td></tr>
+                    <tr><td><strong>Dashboard Stats</strong></td><td><span class="badge badge-red">Hardcoded</span></td><td>"128 Documents", "45 Active Users" are static HTML</td></tr>
+                    <tr><td><strong>Admin Panel</strong></td><td><span class="badge badge-red">Hardcoded</span></td><td>User list, AI Health, costs — all static HTML</td></tr>
+                    <tr><td><strong>Analytics Charts</strong></td><td><span class="badge badge-red">Hardcoded</span></td><td>Pie/bar charts use fixed data arrays</td></tr>
+                    <tr><td><strong>Knowledge Base Search</strong></td><td><span class="badge badge-red">Non-functional</span></td><td>Search box exists but does nothing</td></tr>
+                    <tr><td><strong>Document Upload</strong></td><td><span class="badge badge-red">Non-functional</span></td><td>Button links to page but no upload logic</td></tr>
+                    <tr><td><strong>Chat History</strong></td><td><span class="badge badge-red">Hardcoded</span></td><td>Static list of fake past conversations</td></tr>
+                    <tr><td><strong>Settings Toggles</strong></td><td><span class="badge badge-red">Non-functional</span></td><td>Toggle switches render but don't save state</td></tr>
+                </tbody>
+            </table>
+
+            <h2>3.3 Authentication & Access Control Issues</h2>
+            <ul class="styled-list">
+                <li><strong>No Role-Based Access Control (RBAC):</strong> Any authenticated user can access <code>admin.html</code> directly by navigating to the URL</li>
+                <li><strong>No password validation:</strong> Registration allows any password length including 1 character</li>
+                <li><strong>No email verification flow</strong></li>
+                <li><strong>displayName never saved:</strong> The "Full Name" field is collected but never stored to Firebase</li>
+                <li><strong>"Forgot Password" link</strong> points to <code>#</code> — does nothing</li>
+            </ul>
+
+            <h2>3.4 No Data Persistence</h2>
+            <ul class="styled-list">
+                <li>Chat conversations are <strong>lost on page refresh</strong> — not saved to any database</li>
+                <li>User preferences (theme, language) are stored only in <code>localStorage</code></li>
+                <li>No Firestore/database integration for any data whatsoever</li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 4: TECHNICAL ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">4</span> Technical Analysis & Issues</h1>
+
+            <h2>4.1 Security Vulnerabilities</h2>
+
+            <div class="alert alert-critical">
+                <div class="alert-icon">🔓</div>
+                <div>
+                    <div class="alert-title">CRITICAL: XSS Vulnerability</div>
+                    <div class="alert-text">User-typed messages are rendered with <code>innerHTML</code> without sanitization. An attacker could inject malicious scripts via chat messages.</div>
+                </div>
+            </div>
+
+            <div class="diff-block">
+<span class="diff-remove">- div.innerHTML = text.replace(/\n/g, '&lt;br&gt;');   // ❌ XSS vulnerable</span>
+<span class="diff-add">+ div.textContent = text;                          // ✅ Safe</span>
+<span style="color: #6b7280;">  // OR use DOMPurify:</span>
+<span class="diff-add">+ div.innerHTML = DOMPurify.sanitize(text);        // ✅ Safe with HTML</span>
+            </div>
+
+            <div class="alert alert-warning">
+                <div class="alert-icon">🔑</div>
+                <div>
+                    <div class="alert-title">Firebase API Key Exposed in Source Code</div>
+                    <div class="alert-text">Firebase configuration including API key, project ID, and app ID are hardcoded in <code>firebase-config.js</code>. While Firebase keys are designed to be public, no Firestore security rules or rate limiting are visible.</div>
+                </div>
+            </div>
+
+            <h2>4.2 CSS Issues</h2>
+            <table>
+                <thead><tr><th>Issue</th><th>Detail</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Duplicate CSS rules</strong></td><td><code>.faq-item</code>, <code>.faq-toggle</code>, <code>.faq-content</code> defined <strong>twice</strong> in style.css (lines 535-575 and 602-642)</td></tr>
+                    <tr><td><strong>Monolithic file</strong></td><td>1,335 lines in a single file with no logical separation</td></tr>
+                    <tr><td><strong>100+ inline styles</strong></td><td>Heavy use of inline <code>style</code> attributes across HTML overrides CSS and makes maintenance difficult</td></tr>
+                    <tr><td><strong>Broken HTML nesting</strong></td><td><code>knowledge.html</code> is missing the <code>&lt;/aside&gt;</code> closing tag</td></tr>
+                </tbody>
+            </table>
+
+            <h2>4.3 JavaScript Architecture Conflicts</h2>
+            <p>Two competing script systems exist and <strong>conflict</strong> with each other:</p>
+
+            <table>
+                <thead><tr><th>System</th><th>File</th><th>Functions</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Legacy System</strong></td><td>script.js (323 lines)</td><td><code>setTheme()</code>, <code>toggleTheme()</code>, own chatbot logic</td></tr>
+                    <tr><td><strong>ES6 Module System</strong></td><td>js/auth.js + js/theme.js</td><td><code>initTheme()</code>, <code>toggleTheme()</code> (different defaults)</td></tr>
+                </tbody>
+            </table>
+            <p><code>script.js</code> defaults theme to <strong>dark</strong>; <code>theme.js</code> defaults to <strong>light</strong> — causing inconsistent behavior.</p>
+
+            <h2>4.4 Performance Issues</h2>
+            <ul class="styled-list">
+                <li>No code minification — all files served unminified</li>
+                <li>Placeholder images from <code>via.placeholder.com</code> (external service may be slow/unavailable)</li>
+                <li>No lazy loading — all scripts and styles load eagerly</li>
+                <li>No service worker — no offline capability</li>
+                <li>Firebase SDK (100+ KB) loaded from CDN on every authenticated page</li>
+            </ul>
+
+            <h2>4.5 Accessibility Gaps</h2>
+            <ul class="styled-list">
+                <li>No <code>aria-label</code> attributes on most interactive elements</li>
+                <li>No keyboard navigation support for the sidebar</li>
+                <li>No screen reader announcements for chat messages</li>
+                <li>No skip-to-content links</li>
+                <li>FAQ accordion has no ARIA roles (<code>role="tablist"</code>, <code>aria-expanded</code>)</li>
+            </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 5: RECOMMENDATIONS ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">5</span> Improvement Recommendations</h1>
+
+            <!-- CRITICAL -->
+            <div class="priority-card critical">
+                <div class="priority-header">
+                    <div class="priority-icon">🔴</div>
+                    <div class="priority-title">Priority 1: Critical — Must Fix</div>
+                </div>
+                <ul class="priority-list">
+                    <li><strong>Integrate a Real AI/NLP Engine</strong> — Replace keyword matcher with OpenAI GPT, Google Gemini API, Rasa, or Dialogflow. Use RAG (Retrieval-Augmented Generation) with INGRES groundwater data.</li>
+                    <li><strong>Fix XSS Vulnerability</strong> — Replace all <code>innerHTML</code> assignments for user content with <code>textContent</code> or use DOMPurify sanitization library.</li>
+                    <li><strong>Build a Backend API</strong> — Create a Node.js (Express) or Python (FastAPI) server with REST endpoints: <code>POST /api/chat</code>, <code>GET /api/history</code>, <code>POST /api/documents</code>, <code>GET /api/analytics</code>.</li>
+                    <li><strong>Add a Database</strong> — Integrate Firebase Firestore or MongoDB to store chat history, user data, documents, and analytics.</li>
+                </ul>
+            </div>
+
+            <!-- IMPORTANT -->
+            <div class="priority-card important">
+                <div class="priority-header">
+                    <div class="priority-icon">🟡</div>
+                    <div class="priority-title">Priority 2: Important — Should Fix</div>
+                </div>
+                <ul class="priority-list">
+                    <li><strong>Adopt Component Architecture</strong> — Migrate to React/Vite or use Web Components. Create reusable <code>&lt;Sidebar&gt;</code>, <code>&lt;Header&gt;</code>, <code>&lt;ChatWidget&gt;</code> components to eliminate 700+ duplicated lines.</li>
+                    <li><strong>Implement RBAC</strong> — Add a <code>role</code> field to user documents in Firestore. Guard admin pages with role checks, not just authentication.</li>
+                    <li><strong>Real Voice Input</strong> — Use the Web Speech API (<code>webkitSpeechRecognition</code>) which is built into modern browsers and supports Indian English.</li>
+                    <li><strong>Real PDF Export</strong> — Use jsPDF or html2pdf.js library to generate actual PDF files from chat history.</li>
+                    <li><strong>Save displayName on Registration</strong> — Use <code>updateProfile()</code> to store the full name entered during registration.</li>
+                </ul>
+            </div>
+
+            <!-- NICE TO HAVE -->
+            <div class="priority-card nice">
+                <div class="priority-header">
+                    <div class="priority-icon">🟢</div>
+                    <div class="priority-title">Priority 3: Enhancements — Nice to Have</div>
+                </div>
+                <ul class="priority-list">
+                    <li><strong>Reorganize File Structure</strong> — Separate into <code>src/components/</code>, <code>src/pages/</code>, <code>src/services/</code>, <code>src/styles/</code>, and <code>server/</code> directories.</li>
+                    <li><strong>Expand i18n</strong> — Cover all UI text (not just sidebar labels) in English, Hindi, and Tamil. Prepare for RTL support.</li>
+                    <li><strong>INGRES Data Integration</strong> — Connect to real CGWB, India-WRIS, and IMD APIs for live groundwater and rainfall data.</li>
+                    <li><strong>Progressive Web App (PWA)</strong> — Add <code>manifest.json</code>, service worker for offline access, and push notifications for water level alerts.</li>
+                    <li><strong>Automated Testing</strong> — Add unit tests (Jest), integration tests, and end-to-end tests (Playwright/Cypress).</li>
+                </ul>
+            </div>
+
+            <h2>5.1 Recommended AI Integration Architecture</h2>
+            <div class="code-block">
+<span class="comment">// Recommended backend endpoint for AI chat</span>
+<span class="keyword">async function</span> <span class="function">handleChatMessage</span>(req, res) {
+    <span class="keyword">const</span> { message, userId, sessionId } = req.body;
+
+    <span class="comment">// 1. Retrieve relevant INGRES data (RAG)</span>
+    <span class="keyword">const</span> context = <span class="keyword">await</span> <span class="function">searchKnowledgeBase</span>(message);
+
+    <span class="comment">// 2. Send to AI model with context</span>
+    <span class="keyword">const</span> aiResponse = <span class="keyword">await</span> <span class="function">generateAIResponse</span>({
+        prompt: message,
+        context: context,
+        systemPrompt: <span class="string">"You are the INGRES virtual assistant..."</span>
+    });
+
+    <span class="comment">// 3. Save to database</span>
+    <span class="keyword">await</span> <span class="function">saveChatMessage</span>(userId, sessionId, message, aiResponse);
+
+    <span class="keyword">return</span> res.<span class="function">json</span>({ response: aiResponse });
+}
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 6: SCORECARD ======================== -->
+        <div class="page page-break">
+            <h1 class="section-title"><span class="section-number">6</span> Summary Scorecard & Overall Assessment</h1>
+
+            <h2>6.1 Dimension-by-Dimension Breakdown</h2>
+
+            <div class="chart-container">
+                <!-- Donut Chart -->
+                <div style="text-align: center;">
+                    <div class="donut-chart">
+                        <svg width="160" height="160" viewBox="0 0 160 160">
+                            <!-- Background circle -->
+                            <circle cx="80" cy="80" r="60" fill="none" stroke="#f1f5f9" stroke-width="18"/>
+                            <!-- Score fill: 2.1/10 = 21% = 75.4 of 377 circumference -->
+                            <circle cx="80" cy="80" r="60" fill="none" stroke="url(#scoreGrad)" stroke-width="18"
+                                    stroke-dasharray="79.2 377" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#ef4444"/>
+                                    <stop offset="100%" style="stop-color:#f97316"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="center-text">
+                            <div class="center-value">2.1</div>
+                            <div class="center-label">out of 10</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--gray-400); margin-top: 0.5rem;">Overall Score</p>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="bar-chart">
+                    <div class="bar-row">
+                        <div class="bar-label">AI Integration</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:10%;background:linear-gradient(90deg,#ef4444,#f97316);">1</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Backend</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:3%;background:#ef4444;min-width:28px;">0</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Code Structure</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:20%;background:linear-gradient(90deg,#ef4444,#f97316);">2</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Security</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:20%;background:linear-gradient(90deg,#ef4444,#f97316);">2</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Data Persistence</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:3%;background:#ef4444;min-width:28px;">0</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Completeness</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:15%;background:linear-gradient(90deg,#ef4444,#f97316);">1.5</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">UI/UX Design</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:70%;background:linear-gradient(90deg,#10b981,#34d399);">7</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Responsiveness</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:60%;background:linear-gradient(90deg,#f59e0b,#fbbf24);">6</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Accessibility</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:20%;background:linear-gradient(90deg,#ef4444,#f97316);">2</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">i18n</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:30%;background:linear-gradient(90deg,#f97316,#f59e0b);">3</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Testing</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:3%;background:#ef4444;min-width:28px;">0</div></div>
+                    </div>
+                    <div class="bar-row">
+                        <div class="bar-label">Documentation</div>
+                        <div class="bar-track"><div class="bar-fill" style="width:10%;background:linear-gradient(90deg,#ef4444,#f97316);">1</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>6.2 Overall Assessment</h2>
+
+            <div class="overall-score">
+                <div>
+                    <div class="big-number">2.1</div>
+                    <div class="big-total">/ 10</div>
+                    <div class="big-label">Overall Score</div>
+                </div>
+                <div class="verdict">
+                    <strong>The project has a solid UI/UX foundation but is fundamentally a frontend mockup, not a functional AI chatbot.</strong>
+                    <br><br>
+                    The most critical improvements needed are:
+                    <br>① Integrating a real AI/NLP engine
+                    <br>② Building a backend API
+                    <br>③ Adding a database for data persistence
+                    <br>④ Eliminating code duplication
+                    <br><br>
+                    The visual design is the project's <strong>strongest asset</strong> and should be preserved while rebuilding the core logic.
+                </div>
+            </div>
+
+            <h2>6.3 Full Scorecard Table</h2>
+            <table>
+                <thead>
+                    <tr><th>Dimension</th><th>Score</th><th>Current State</th><th>Target State</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>AI Integration</strong></td><td><span class="badge badge-red">1/10</span></td><td>Keyword matching only</td><td>Real NLP/LLM integration</td></tr>
+                    <tr><td><strong>Backend</strong></td><td><span class="badge badge-red">0/10</span></td><td>None (client-side only)</td><td>REST API + Database</td></tr>
+                    <tr><td><strong>Code Structure</strong></td><td><span class="badge badge-red">2/10</span></td><td>Massive duplication</td><td>Component architecture</td></tr>
+                    <tr><td><strong>Security</strong></td><td><span class="badge badge-red">2/10</span></td><td>XSS vulnerability, no RBAC</td><td>Sanitization, RBAC, env vars</td></tr>
+                    <tr><td><strong>Data Persistence</strong></td><td><span class="badge badge-red">0/10</span></td><td>All static/hardcoded</td><td>Firestore/MongoDB</td></tr>
+                    <tr><td><strong>Feature Completeness</strong></td><td><span class="badge badge-red">1.5/10</span></td><td>~15% functional</td><td>All features working</td></tr>
+                    <tr><td><strong>UI/UX Design</strong></td><td><span class="badge badge-green">7/10</span></td><td>Clean, modern design</td><td>Maintain and polish</td></tr>
+                    <tr><td><strong>Responsiveness</strong></td><td><span class="badge badge-yellow">6/10</span></td><td>Basic responsive</td><td>Full responsive + PWA</td></tr>
+                    <tr><td><strong>Accessibility</strong></td><td><span class="badge badge-red">2/10</span></td><td>Minimal ARIA</td><td>WCAG 2.1 AA</td></tr>
+                    <tr><td><strong>i18n</strong></td><td><span class="badge badge-yellow">3/10</span></td><td>Sidebar labels only</td><td>Full app translation</td></tr>
+                    <tr><td><strong>Testing</strong></td><td><span class="badge badge-red">0/10</span></td><td>None</td><td>Unit + integration tests</td></tr>
+                    <tr><td><strong>Documentation</strong></td><td><span class="badge badge-red">1/10</span></td><td>No README</td><td>Full docs + comments</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- ======================== SECTION 7: ROADMAP ======================== -->
+        <div class="page">
+            <h1 class="section-title"><span class="section-number">7</span> Recommended Action Plan & Roadmap</h1>
+
+            <div class="roadmap">
+                <!-- Phase 1 -->
+                <div class="phase">
+                    <div class="phase-line">
+                        <div class="phase-dot" style="background: var(--red);"></div>
+                        <div class="phase-connector" style="background: linear-gradient(var(--red), var(--yellow));"></div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-label" style="color: var(--red);">Phase 1 — Week 1</div>
+                        <div class="phase-title">🔴 Foundation & Security</div>
+                        <p style="font-size: 0.88rem;">Fix critical security vulnerabilities, set up the backend server, and integrate the AI API.</p>
+                        <div class="phase-tasks">
+                            <span class="phase-task">Fix XSS vulnerability</span>
+                            <span class="phase-task">Set up Node.js/Python backend</span>
+                            <span class="phase-task">Integrate AI API (Gemini/OpenAI)</span>
+                            <span class="phase-task">Connect Firestore database</span>
+                            <span class="phase-task">Move Firebase config to env vars</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="phase">
+                    <div class="phase-line">
+                        <div class="phase-dot" style="background: var(--yellow);"></div>
+                        <div class="phase-connector" style="background: linear-gradient(var(--yellow), var(--blue));"></div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-label" style="color: var(--yellow);">Phase 2 — Week 2-3</div>
+                        <div class="phase-title">🟡 Core Feature Implementation</div>
+                        <p style="font-size: 0.88rem;">Replace all fake/simulated features with real working implementations.</p>
+                        <div class="phase-tasks">
+                            <span class="phase-task">Real AI chat with context</span>
+                            <span class="phase-task">Chat history persistence</span>
+                            <span class="phase-task">Role-Based Access Control</span>
+                            <span class="phase-task">Web Speech API voice input</span>
+                            <span class="phase-task">jsPDF export</span>
+                            <span class="phase-task">Knowledge base search</span>
+                            <span class="phase-task">Document upload (Firestore Storage)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="phase">
+                    <div class="phase-line">
+                        <div class="phase-dot" style="background: var(--blue);"></div>
+                        <div class="phase-connector" style="background: linear-gradient(var(--blue), var(--green));"></div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-label" style="color: var(--blue);">Phase 3 — Week 3-4</div>
+                        <div class="phase-title">🔵 Architecture Migration</div>
+                        <p style="font-size: 0.88rem;">Refactor from raw HTML to a component-based architecture to eliminate duplication.</p>
+                        <div class="phase-tasks">
+                            <span class="phase-task">Migrate to React/Vite</span>
+                            <span class="phase-task">Create reusable components</span>
+                            <span class="phase-task">Restructure file organization</span>
+                            <span class="phase-task">Split CSS into modules</span>
+                            <span class="phase-task">Consolidate JS systems</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="phase">
+                    <div class="phase-line">
+                        <div class="phase-dot" style="background: var(--green);"></div>
+                        <div class="phase-connector" style="background: var(--green); opacity: 0.3;"></div>
+                    </div>
+                    <div class="phase-content">
+                        <div class="phase-label" style="color: var(--green);">Phase 4 — Week 4-5</div>
+                        <div class="phase-title">🟢 Polish & Production</div>
+                        <p style="font-size: 0.88rem;">Final quality, accessibility, testing, and production deployment.</p>
+                        <div class="phase-tasks">
+                            <span class="phase-task">Full i18n (EN/HI/TA)</span>
+                            <span class="phase-task">WCAG 2.1 AA accessibility</span>
+                            <span class="phase-task">PWA implementation</span>
+                            <span class="phase-task">Automated test suite</span>
+                            <span class="phase-task">Performance optimization</span>
+                            <span class="phase-task">README & documentation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>Key Takeaway:</strong> The INGRES Chatbot project has a <strong>strong visual design foundation</strong> that should be preserved. The critical path forward is to build a real backend with AI integration, replace all simulated features with working implementations, and adopt a component-based architecture to eliminate the massive code duplication. With these improvements, the project can fulfill its promise as a genuine AI-driven virtual assistant for groundwater information.</p>
+            </div>
+        </div>
+
+        <!-- ======================== FOOTER ======================== -->
+        <div class="report-footer">
+            <p>INGRES Chatbot — Complete Project Analysis Report • Generated July 24, 2026</p>
+            <p style="margin: 0.25rem 0 0;">24 files analyzed across 2 directories • AI-driven ChatBOT for INGRES as a Virtual Assistant</p>
+        </div>
+    </div>
+
+    <!-- ======================== PRINT BUTTON BAR ======================== -->
+    <div class="print-bar no-print">
+        <p>💡 To save as PDF:</p>
+        <button class="print-btn" onclick="window.print()">⬇ Save as PDF (Ctrl + P)</button>
+        <p>Select <strong>"Save as PDF"</strong> as destination, then click Save.</p>
+    </div>
+
+    <div class="bottom-spacer no-print"></div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+# 27_Testing_Checklist.md
+
+# Testing Checklist
+
+## Authentication
+
+- Register
+- Login
+- Logout
+- Password Reset
+
+---
+
+## Chat
+
+- Send Message
+- Receive Response
+- Save History
+
+---
+
+## Knowledge Base
+
+- Add
+- Edit
+- Delete
+- Search
+
+---
+
+## Documents
+
+- Upload
+- Download
+- Delete
+
+---
+
+## Dashboard
+
+- Statistics
+- Charts
+
+---
+
+## Security
+
+- Authentication
+- Authorization
+- Input Validation
+
+---
+
+## Deployment
+
+- Frontend
+- Backend
+- Database Connection
+- AI Integration

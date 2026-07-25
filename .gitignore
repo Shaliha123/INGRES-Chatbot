@@ -1,0 +1,32 @@
+# Environment variables and secrets
+.env
+backend/.env
+*.env
+
+# Python byte-code and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# User uploads & temporary files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+Desktop.ini

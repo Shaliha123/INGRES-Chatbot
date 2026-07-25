@@ -1,0 +1,13 @@
+/* INGRES Responsive Grid & Media Queries */
+@media (max-width: 1024px) {
+  .app-sidebar {
+    transform: translateX(-100%);
+  }
+  .app-sidebar.active {
+    transform: translateX(0);
+  }
+  .app-main {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+}

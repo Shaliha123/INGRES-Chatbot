@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - INGRES</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .chat-layout {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-alt);
+        }
+        .chat-main {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .msg {
+            max-width: 70%;
+            padding: 1.25rem 1.75rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            position: relative;
+        }
+        .msg-ai {
+            background: var(--bg-alt);
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .msg-user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-input-container {
+            padding: 2rem 2.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .chat-input-box {
+            display: flex;
+            gap: 1rem;
+            background: var(--bg-alt);
+            padding: 0.75rem 1.25rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+        .chat-input-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.5rem;
+            outline: none;
+            font-size: 1rem;
+        }
+        .btn-send {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .chat-suggestions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.25rem;
+            justify-content: center;
+        }
+        .suggestion-item {
+            padding: 0.5rem 1.25rem;
+            background: var(--bg-alt);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+        .suggestion-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+    </style>
+</head>
+<body class="app-layout">
+    <aside class="app-sidebar">
+        <a href="index.html" class="logo" style="color: white; margin-bottom: 3rem;">
+            <div class="logo-icon" style="background: var(--primary);">
+                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
+            INGRES
+        </a>
+        <nav style="flex: 1;">
+            <a href="dashboard.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                <span data-i18n="dashboard">Dashboard</span>
+            </a>
+            <a href="chat.html" class="app-nav-item active">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                <span data-i18n="chat">Chat</span>
+            </a>
+            <a href="knowledge.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <span data-i18n="knowledge">Knowledge Base</span>
+            </a>
+            <a href="documents.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span data-i18n="documents">Documents</span>
+            </a>
+            <a href="history.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span data-i18n="history">History</span>
+            </a>
+            <a href="analytics.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span data-i18n="analytics">Analytics</span>
+            </a>
+        </nav>
+        <div style="border-top: 1px solid #1e293b; padding-top: 1.5rem;">
+            <a href="settings.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span data-i18n="settings">Settings</span>
+            </a>
+            <a href="profile.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span data-i18n="profile">Profile</span>
+            </a>
+            <a href="#" id="logout-btn" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                <span data-i18n="logout">Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="chat-main">
+        <header style="padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <h1 style="font-size: 1.25rem; font-weight: 800;">New Chat</h1>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button id="download-chat-pdf" class="btn btn-login" style="padding: 0.4rem 1rem; font-size: 0.8rem;">📄 Download PDF</button>
+                <div style="color: var(--text-muted); font-size: 0.9rem;">Today</div>
+            </div>
+        </header>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="msg msg-ai">
+                Hello! Welcome to the INGRES Virtual Assistant. I can help you with groundwater information, borewell data, rainfall, water quality, recharge methods, and government schemes. How can I assist you today?
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <form id="chat-form">
+                <div class="chat-input-box">
+                    <button type="button" id="voice-btn" style="background:none; border:none; cursor:pointer; font-size:1.25rem;">🎤</button>
+                    <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
+                    <button type="submit" class="btn-send">Send</button>
+                </div>
+            </form>
+            <div class="chat-suggestions">
+                <div class="suggestion-item">What is INGRES?</div>
+                <div class="suggestion-item">Groundwater level in Coimbatore</div>
+                <div class="suggestion-item">Government schemes</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, onAuthStateChanged, signOut } from './js/auth.js';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        });
+
+        const chatForm = document.getElementById('chat-form');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+
+        function addMessage(role, text) {
+            const div = document.createElement('div');
+            div.className = `msg msg-${role}`;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        const chatResponses = [
+            {
+                keywords: ["hi", "hello", "hey"],
+                response: "Hello! Welcome to the INGRES Virtual Assistant. I can help you with groundwater information, borewell data, rainfall, water quality, recharge methods, and government schemes. How can I assist you today?"
+            },
+            {
+                keywords: ["what is ingres"],
+                response: "INGRES (Integrated Groundwater Information Retrieval System) is a platform that provides groundwater-related information such as water levels, water quality, borewell details, rainfall data, aquifer information, and groundwater management resources."
+            },
+            {
+                keywords: ["groundwater level", "coimbatore"],
+                response: "Based on the available INGRES data, the groundwater level for Coimbatore can be viewed for different monitoring stations. Please specify the area or village for more accurate information."
+            },
+            {
+                keywords: ["safe for drinking", "water quality"],
+                response: "Water quality depends on parameters such as pH, Total Dissolved Solids (TDS), fluoride, nitrate, and hardness. Please provide the location so I can retrieve the relevant information."
+            },
+            {
+                keywords: ["register", "borewell"],
+                response: "Borewell registration is handled by the respective groundwater authority. You can visit the official portal or contact the district groundwater office for the application process."
+            },
+            {
+                keywords: ["rainfall", "karur"],
+                response: "The rainfall records for Karur can be viewed monthly or annually. Would you like the latest rainfall data or historical trends?"
+            },
+            {
+                keywords: ["recharge", "groundwater"],
+                response: "Effective groundwater recharge methods include:\n• Rainwater harvesting\n• Recharge pits\n• Recharge wells\n• Percolation ponds\n• Check dams\n• Recharge trenches"
+            },
+            {
+            return msgDiv;
+        }
+
+        // Load Past Chat History
+        async function loadHistory() {
+            try {
+                const res = await APIClient.getChatHistory();
+                if (res.success && res.data && res.data.length > 0) {
+                    // Reverse to show oldest first
+                    const history = res.data.slice().reverse();
+                    history.forEach(item => {
+                        addMessage('user', item.question);
+                        addMessage('ai', item.response);
+                    });
+                }
+            } catch (err) {
+                console.warn("Notice: Sign in to persist session chat history across devices.");
+            }
+        }
+        loadHistory();
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage('user', text);
+            chatInput.value = '';
+
+            const loadingMsg = addMessage('ai', 'Thinking... Searching INGRES Knowledge Base & Generating Answer...');
+
+            try {
+                const res = await APIClient.sendChatMessage(text, currentConversationId);
+                if (res.success && res.data) {
+                    if (res.data.conversation_id) {
+                        currentConversationId = res.data.conversation_id;
+                    }
+                    loadingMsg.remove();
+                    addMessage('ai', res.data.response, res.data.sources_used);
+                } else {
+                    loadingMsg.textContent = "Error: " + (res.message || "Failed to generate AI response.");
+                }
+            } catch (err) {
+                loadingMsg.textContent = "API Error: " + err.message + ". Please ensure backend server is running.";
+            }
+        });
+
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', () => {
+                chatInput.value = item.textContent;
+                chatForm.dispatchEvent(new Event('submit'));
+            });
+        });
+    </script>
+</body>
+</html>

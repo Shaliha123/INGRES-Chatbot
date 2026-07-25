@@ -1,0 +1,28 @@
+/* INGRES Layout CSS */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: 280px;
+  background: var(--bg-dark);
+  color: white;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transition: var(--transition);
+}
+
+.app-main {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2.5rem;
+  background: var(--bg-alt);
+  min-height: 100vh;
+}

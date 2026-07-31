@@ -72,7 +72,7 @@ export class APIClient {
         if (response.status === 401 && !endpoint.includes("/login") && !endpoint.includes("/register")) {
           this.removeAuthToken();
           if (!window.location.pathname.includes("login.html") && !window.location.pathname.includes("register.html")) {
-            alert("Your session has expired or authentication failed. Please sign in.");
+            alert("Please sign in or create an account to access this feature.");
             window.location.href = "login.html";
           }
         }

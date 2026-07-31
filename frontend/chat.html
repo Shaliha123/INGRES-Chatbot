@@ -84,8 +84,9 @@
         .chat-suggestions {
             display: flex;
             gap: 0.6rem;
-            margin-top: 0.85rem;
+            margin-bottom: 0.85rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
         .suggestion-item {
             padding: 0.45rem 0.9rem;
@@ -436,20 +437,20 @@
         </div>
 
         <div class="chat-input-container">
-            <form id="chat-form">
-                <div class="chat-input-box">
-                    <button type="button" id="voice-btn" style="background:none; border:none; cursor:pointer; font-size:1.1rem;" title="Dictate question">🎤</button>
-                    <input type="text" id="chat-input" placeholder="Ask about groundwater, rainfall forecast, location status, or reports..." autocomplete="off">
-                    <button type="submit" class="btn btn-register" style="padding: 0.55rem 1.35rem; font-size: 0.9rem;">Send</button>
-                    <button type="button" id="download-chat-btn" style="background: white; border:1px solid #cbd5e1; border-radius: 10px; padding: 0.55rem 0.85rem; font-size: 0.8rem; font-weight: 600; cursor:pointer; color: #334155;" title="Export Transcript">📄 Export</button>
-                </div>
-            </form>
             <div class="chat-suggestions">
                 <div class="suggestion-item">What is the exact details of ground water level in Tamil Nadu state wise?</div>
                 <div class="suggestion-item">Will rainfall improve groundwater recharge in Chennai this week?</div>
                 <div class="suggestion-item">Show groundwater status near Vellore</div>
                 <div class="suggestion-item">Water quality parameters in Salem</div>
             </div>
+            <form id="chat-form">
+                <div class="chat-input-box">
+                    <button type="button" id="voice-btn" style="background:none; border:none; cursor:pointer; font-size:1.1rem;" title="Dictate question">🎙️</button>
+                    <input type="text" id="chat-input" placeholder="Ask about groundwater, rainfall forecast, location status, or reports..." autocomplete="off">
+                    <button type="submit" class="btn btn-register" style="padding: 0.55rem 1.35rem; font-size: 0.9rem;">Send</button>
+                    <button type="button" id="download-chat-btn" style="background: white; border:1px solid #cbd5e1; border-radius: 10px; padding: 0.55rem 0.85rem; font-size: 0.8rem; font-weight: 600; cursor:pointer; color: #334155;" title="Export Transcript">📥 Export</button>
+                </div>
+            </form>
         </div>
     </main>
 

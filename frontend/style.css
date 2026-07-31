@@ -1,3 +1,17 @@
+/* Smooth Page Load Fade-In */
+@view-transition {
+    navigation: auto;
+}
+
+body {
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* Global layout and theme based on INGRES official hydrogeological portal design */
 :root {
     /* Official Enterprise Hydro Palette */

@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 
 class ChatMessageRequest(BaseModel):
@@ -11,6 +11,11 @@ class ChatMessageResponse(BaseModel):
     question: str
     response: str
     sources_used: List[str]
+    intent: Optional[str] = "GENERAL"
+    location_data: Optional[Dict[str, Any]] = None
+    weather_data: Optional[Dict[str, Any]] = None
+    water_quality_data: Optional[Dict[str, Any]] = None
+    groundwater_records: Optional[List[Dict[str, Any]]] = None
     timestamp: str
 
 class ChatHistoryItem(BaseModel):
@@ -18,4 +23,10 @@ class ChatHistoryItem(BaseModel):
     conversation_id: str
     question: str
     response: str
+    sources_used: Optional[List[str]] = []
+    intent: Optional[str] = "GENERAL"
+    location_data: Optional[Dict[str, Any]] = None
+    weather_data: Optional[Dict[str, Any]] = None
+    water_quality_data: Optional[Dict[str, Any]] = None
+    groundwater_records: Optional[List[Dict[str, Any]]] = None
     timestamp: str

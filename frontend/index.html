@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="js/theme.js"></script>
 </head>
 <body>
     <header class="header">
@@ -39,69 +40,30 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <span class="chip">AI-DRIVEN CHATBOT</span>
-                <h1>Your AI Virtual Assistant for INGRES</h1>
-                <p>Get instant answers, automate tasks, and enhance productivity with the power of AI. Your intelligent companion for all things INGRES.</p>
+                <span class="chip">NATIONAL GROUNDWATER INFORMATION PORTAL</span>
+                <h1>AI-Driven Groundwater & Hydrogeological Assistant</h1>
+                <p>Access real-time Central Ground Water Board (CGWB) report insights, seasonal water table depth (m bgl), district extraction status, weather rainfall forecasts, and water quality compliance with multi-provider AI reasoning.</p>
                 <div class="hero-btns">
-                    <a href="register.html" class="btn btn-hero-primary">Get Started</a>
-                    <a href="about.html" class="btn btn-hero-secondary">Learn More</a>
+                    <a href="chat.html" class="btn btn-hero-primary">Start AI Chat Assistant</a>
+                    <a href="about.html" class="btn btn-hero-secondary">Explore Hydro Knowledge</a>
                 </div>
                 <div class="hero-features">
                     <div class="hero-feature-item">
                         <div class="feature-dot"></div>
-                        Intelligent Responses
+                        CGWB Report Synthesis
                     </div>
                     <div class="hero-feature-item">
                         <div class="feature-dot"></div>
-                        Secure & Reliable
+                        Live Weather Forecasts
                     </div>
                     <div class="hero-feature-item">
                         <div class="feature-dot"></div>
-                        Available 24/7
+                        BIS Quality Verification
                     </div>
                 </div>
             </div>
             <div class="hero-visual">
-                <div class="robot-container">
-                    <!-- Robot Illustration -->
-                    <svg viewBox="0 0 500 500" class="robot-img">
-                        <defs>
-                            <linearGradient id="gradRobot" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#f1f5f9;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <circle cx="250" cy="250" r="180" fill="#eef2ff" />
-                        <!-- Simplified Robot Body -->
-                        <rect x="170" y="180" width="160" height="140" rx="45" fill="white" stroke="#e2e8f0" stroke-width="2"/>
-                        <!-- Blue Face Screen -->
-                        <rect x="190" y="200" width="120" height="80" rx="35" fill="#1e293b" />
-                        <!-- Glowing Eyes -->
-                        <circle cx="225" cy="240" r="10" fill="#3b82f6">
-                            <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
-                        </circle>
-                        <circle cx="275" cy="240" r="10" fill="#3b82f6">
-                            <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" />
-                        </circle>
-                        <!-- Ears -->
-                        <rect x="150" y="225" width="20" height="50" rx="10" fill="#cbd5e1" />
-                        <rect x="330" y="225" width="20" height="50" rx="10" fill="#cbd5e1" />
-                    </svg>
-                    <div class="chat-bubble">
-                        Hello! 👋<br>How can I help you today?
-                    </div>
-                    <div class="laptop-bubble">
-                        <div style="background: white; padding: 4px; border-radius: 4px; display: flex;">
-                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>
-                        </div>
-                        <span>INGRES AI Assistant</span>
-                    </div>
-                    <div class="typing-dots-float">
-                        <div style="width:6px;height:6px;background:#cbd5e1;border-radius:50%"></div>
-                        <div style="width:6px;height:6px;background:#cbd5e1;border-radius:50%"></div>
-                        <div style="width:6px;height:6px;background:#cbd5e1;border-radius:50%"></div>
-                    </div>
-                </div>
+                <img src="images/ingres_hydro_hero.png" alt="INGRES Hydrogeological AI Portal" style="width: 100%; max-width: 520px; border-radius: 20px; box-shadow: var(--shadow-lg);">
             </div>
         </section>
 
@@ -109,47 +71,47 @@
         <section class="section">
             <div class="about-grid">
                 <div>
-                    <h2 style="font-size: 2.8rem; font-weight: 800; margin-bottom: 1.5rem;">About INGRES AI Assistant</h2>
-                    <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem;">INGRES AI Assistant is an advanced AI-driven chatbot designed to simplify business access, automate tasks, and enhance your productivity across organizations.</p>
+                    <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1.25rem;">About INGRES Groundwater Assistant</h2>
+                    <p style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem;">INGRES Assistant empowers hydrogeologists, government officials, researchers, and farmers with an intelligent AI conversational layer. By indexing official groundwater yearbooks and combining live meteorological & spatial APIs, the system transforms complex hydro data into clear, actionable advice.</p>
 
                     <div class="about-cards-row">
                         <div class="mini-card">
-                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 1rem;">🤖</div>
-                            <h4>Smart & Intelligent</h4>
-                            <p>NLP ensures accurate query understanding.</p>
+                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 0.75rem;">💧</div>
+                            <h4>Aquifer Intelligence</h4>
+                            <p>Tracks water table depth m bgl across seasonal cycles.</p>
                         </div>
                         <div class="mini-card">
-                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 1rem;">🔒</div>
-                            <h4>Secure & Private</h4>
-                            <p>Data protected with high-level encryption.</p>
+                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 0.75rem;">🌧️</div>
+                            <h4>Weather & Rainfall</h4>
+                            <p>Integrated Open-Meteo 7-day precipitation forecasts.</p>
                         </div>
                         <div class="mini-card">
-                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 1rem;">⏰</div>
-                            <h4>Always Available</h4>
-                            <p>24/7 assistance whenever you need it.</p>
+                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 0.75rem;">🧪</div>
+                            <h4>Water Quality</h4>
+                            <p>Verifies TDS, Fluoride, and Nitrate against BIS IS:10500.</p>
                         </div>
                         <div class="mini-card">
-                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 1rem;">🔄</div>
-                            <h4>Seamless Integration</h4>
-                            <p>Works with your existing workflows.</p>
+                            <div style="color:var(--primary); font-size: 1.5rem; margin-bottom: 0.75rem;">⚡</div>
+                            <h4>Multi-LLM Fallback</h4>
+                            <p>Gemini AI + OpenAI fallback agent for uninterrupted access.</p>
                         </div>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: flex-end;">
-                    <img src="https://via.placeholder.com/500x500/f1f5f9/4f46e5?text=Illustration+of+Collaboration" alt="About Illustration" style="max-width: 100%; border-radius: 30px;">
+                <div style="display: flex; justify-content: flex-end; align-items: center;">
+                    <img src="images/ingres_about_collab.png" alt="Hydrogeology Collaboration" style="max-width: 100%; border-radius: 24px; box-shadow: var(--shadow-sm);">
                 </div>
             </div>
         </section>
 
         <!-- Mission Section -->
         <section class="section" style="max-width: 100%; padding: 0 2rem;">
-            <div class="mission-box">
+            <div class="mission-box" style="background: #0f172a; border-radius: 24px; padding: 3rem; color: white; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: center;">
                 <div class="mission-content">
-                    <h2>Our Mission</h2>
-                    <p>To empower organizations with AI-driven solutions that improve efficiency, reduce manual effort, and enable better decision-making.</p>
+                    <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem; color: white;">Our Hydrogeological Mission</h2>
+                    <p style="font-size: 1.05rem; opacity: 0.9; line-height: 1.7;">To safeguard national water security by making complex groundwater assessments, artificial recharge recommendations, and water safety standards immediately accessible through intuitive AI conversational interfaces.</p>
                 </div>
                 <div style="display: flex; justify-content: center;">
-                    <img src="https://via.placeholder.com/500x300/334155/FFFFFF?text=Modern+AI+Illustration" alt="Mission Illustration" style="width: 100%; border-radius: 20px;">
+                    <img src="images/ingres_about_collab.png" alt="Mission Graphic" style="width: 100%; max-width: 380px; border-radius: 16px; opacity: 0.95;">
                 </div>
             </div>
         </section>
@@ -157,42 +119,42 @@
         <!-- Features Section -->
         <section class="section">
             <div class="section-header">
-                <h2>Powerful Features Built for Productivity</h2>
+                <h2>Domain Features Built for Water Resource Governance</h2>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon-box">💬</div>
-                    <h3>AI-Powered Conversations</h3>
-                    <p>Natural language understanding for human-like interactions.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon-box">🔍</div>
-                    <h3>Knowledge Base Search</h3>
-                    <p>Quickly find information from your organization's documentation.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon-box">📄</div>
-                    <h3>Document Understanding</h3>
-                    <p>Extract and analyze information from various document formats.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon-box">⚡</div>
-                    <h3>Task Automation</h3>
-                    <p>Automate repetitive tasks and workflows to save time.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon-box">📱</div>
-                    <h3>Multi-Platform Support</h3>
-                    <p>Access the assistant from web, mobile, and other platforms.</p>
+                    <div class="feature-icon-box">🎯</div>
+                    <h3>Intelligent Intent Classifier</h3>
+                    <p>Routes questions across General, Weather, Quality, Location, and RAG intents automatically.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon-box">📊</div>
-                    <h3>Analytics & Insights</h3>
-                    <p>Gain valuable insights into assistant performance and usage.</p>
+                    <h3>Structured Measurement Extraction</h3>
+                    <p>Stores district, season, depth m bgl, and extraction stage % in MongoDB Atlas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">🗺️</div>
+                    <h3>Interactive Leaflet Maps</h3>
+                    <p>Renders geocoded location coordinates and spatial maps for extracted district entities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">🧪</div>
+                    <h3>BIS IS:10500 Safety Check</h3>
+                    <p>Evaluates TDS, Fluoride, and Nitrate parameters against Indian Drinking Water standards.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">💡</div>
+                    <h3>Dynamic Recommendation Chips</h3>
+                    <p>Offers intelligent, non-repeating follow-up questions tailored to your current turn.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-box">📈</div>
+                    <h3>Real-Time Chart.js Analytics</h3>
+                    <p>Tracks conversation volume, indexing trends, and system health metrics on the dashboard.</p>
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 4rem;">
-                <a href="features.html" class="btn btn-register" style="padding: 1rem 2.5rem;">Explore All Features</a>
+            <div style="text-align: center; margin-top: 3.5rem;">
+                <a href="chat.html" class="btn btn-register" style="padding: 0.85rem 2.5rem; font-size: 1rem;">Launch Chat Assistant</a>
             </div>
         </section>
 

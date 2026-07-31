@@ -30,3 +30,8 @@ backend/uploads/*
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Test Results & Logs
+test_results/
+*.log
+*audit_traces.json

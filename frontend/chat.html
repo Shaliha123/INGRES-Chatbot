@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - INGRES</title>
+    <title>Chat - INGRES AI Assistant</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="js/theme.js"></script>
+    
+    <!-- Leaflet.js for Interactive Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         .chat-layout {
             display: flex;
@@ -17,89 +23,345 @@
             margin-left: 280px;
             display: flex;
             flex-direction: column;
-            background: white;
+            background: #f8fafc;
+            height: 100vh;
         }
         .chat-messages {
             flex: 1;
-            padding: 2.5rem;
+            padding: 2rem 2.5rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
         .msg {
-            max-width: 70%;
-            padding: 1.25rem 1.75rem;
-            border-radius: 20px;
+            max-width: 75%;
+            padding: 1.15rem 1.4rem;
+            border-radius: 18px;
             font-size: 0.95rem;
             line-height: 1.6;
             position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease;
         }
         .msg-ai {
-            background: var(--bg-alt);
-            color: var(--text-main);
+            background: #ffffff;
+            color: #0f172a;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            border: 1px solid #e2e8f0;
         }
         .msg-user {
-            background: var(--primary);
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
         }
         .chat-input-container {
-            padding: 2rem 2.5rem;
-            border-top: 1px solid var(--border-color);
+            padding: 1.25rem 2.5rem;
+            border-top: 1px solid #e2e8f0;
+            background: #ffffff;
         }
         .chat-input-box {
             display: flex;
-            gap: 1rem;
-            background: var(--bg-alt);
-            padding: 0.75rem 1.25rem;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
+            gap: 0.75rem;
+            background: #f8fafc;
+            padding: 0.6rem 1rem;
+            border-radius: 14px;
+            border: 1px solid #cbd5e1;
+            align-items: center;
         }
         .chat-input-box input {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 0.5rem;
+            padding: 0.4rem;
             outline: none;
-            font-size: 1rem;
-        }
-        .btn-send {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 0 1.5rem;
-            font-weight: 700;
-            cursor: pointer;
+            font-size: 0.95rem;
+            color: #0f172a;
         }
         .chat-suggestions {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.25rem;
-            justify-content: center;
+            gap: 0.6rem;
+            margin-top: 0.85rem;
+            flex-wrap: wrap;
         }
         .suggestion-item {
-            padding: 0.5rem 1.25rem;
-            background: var(--bg-alt);
+            padding: 0.45rem 0.9rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
             border-radius: 999px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
             cursor: pointer;
-            border: 1px solid var(--border-color);
-            font-weight: 500;
+            transition: all 0.2s;
         }
         .suggestion-item:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: var(--primary);
+            background: #0284c7;
+            color: white;
+            border-color: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        /* Modern Sleek AI Markdown Formatting */
+        .msg-ai h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.6rem;
+        }
+        .msg-ai h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin: 0.85rem 0 0.4rem 0;
+        }
+        .msg-bullet-row {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.35rem 0;
+            align-items: flex-start;
+        }
+        .msg-bullet-icon {
+            color: #0284c7;
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .msg-num-row {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.35rem 0;
+            align-items: flex-start;
+        }
+        .num-badge {
+            background: #0284c7;
+            color: white;
+            font-weight: 700;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 3px;
+        }
+        .sources-container {
+            margin-top: 1rem;
+            padding-top: 0.6rem;
+            border-top: 1px dashed #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+        }
+        .source-tag {
+            background: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .highlight-bold {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        /* Sleek Dynamic Widgets */
+        .weather-widget-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            border-radius: 14px;
+            padding: 1.1rem;
+            margin-top: 0.85rem;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.65rem;
+        }
+        .weather-temp {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+        .forecast-bars {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+            align-items: flex-end;
+            height: 72px;
+        }
+        .forecast-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            gap: 0.25rem;
+        }
+        .forecast-val {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+        .forecast-bar-wrap {
+            width: 100%;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+        .forecast-bar {
+            width: 100%;
+            background: #38bdf8;
+            border-radius: 3px;
+            transition: height 0.3s ease;
+        }
+        .forecast-date {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+        .map-widget-container {
+            height: 200px;
+            width: 100%;
+            border-radius: 14px;
+            margin-top: 0.85rem;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .water-quality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+        }
+        .wq-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.6rem;
+            text-align: center;
+        }
+        .wq-val {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0369a1;
+        }
+        .reco-chip {
+            background: #f0f9ff;
+            color: #0284c7;
+            border: 1px solid #bae6fd;
+            padding: 0.3rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .reco-chip:hover {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+            transform: translateY(-1px);
+        }
+        /* Sleek Markdown Table Styling */
+        .msg-table-container {
+            overflow-x: auto;
+            margin: 0.85rem 0;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .msg-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background: #ffffff;
+        }
+        .msg-table th {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.65rem 0.85rem;
+            border-bottom: 2px solid #cbd5e1;
+            text-align: left;
+        }
+        .msg-table td {
+            padding: 0.55rem 0.85rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+        .msg-table tr:hover td {
+            background: #f8fafc;
+        }
+        .hr-divider {
+            border: 0;
+            border-top: 1px dashed #cbd5e1;
+            margin: 0.85rem 0;
+        }
+        .voice-mic-active {
+            animation: pulseMic 1.2s infinite ease-in-out;
+            background: #fee2e2 !important;
+            border-radius: 50%;
+        }
+        @keyframes pulseMic {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { transform: scale(1.15); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        @media (max-width: 1024px) {
+            .app-sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+            .app-sidebar.open { transform: translateX(280px); }
         }
     </style>
 </head>
 <body class="app-layout">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="app-sidebar">
         <a href="index.html" class="logo" style="color: white; margin-bottom: 3rem;">
             <div class="logo-icon" style="background: var(--primary);">
@@ -150,98 +412,414 @@
     </aside>
 
     <main class="chat-main">
-        <header style="padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-            <h1 style="font-size: 1.25rem; font-weight: 800;">New Chat</h1>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <button id="download-chat-pdf" class="btn btn-login" style="padding: 0.4rem 1rem; font-size: 0.8rem;">📄 Download PDF</button>
-                <div style="color: var(--text-muted); font-size: 0.9rem;">Today</div>
+        <header style="padding: 1.25rem 2.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: white;">
+            <div>
+                <h1 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">INGRES Virtual Assistant</h1>
+                <p style="font-size: 0.82rem; color: #64748b; margin-top: 1px;">Integrated Groundwater Information Retrieval System</p>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: center;">
+                <span style="background: #e0f2fe; color: #0369a1; font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 999px;">
+                    🌐 Multi-API
+                </span>
+                <span style="background: #dcfce7; color: #15803d; font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.65rem; border-radius: 999px; display: inline-flex; align-items: center; gap: 0.3rem;">
+                    <span style="width: 6px; height: 6px; background: #22c55e; border-radius: 50%;"></span>
+                    Gemini AI RAG
+                </span>
             </div>
         </header>
 
         <div class="chat-messages" id="chat-messages">
             <div class="msg msg-ai">
-                Hello! Welcome to the INGRES Virtual Assistant. I can help you with groundwater information, borewell data, rainfall, water quality, recharge methods, and government schemes. How can I assist you today?
+                <h3>👋 Hello! How can I assist you today?</h3>
+                <p>I am your official <strong>INGRES Assistant</strong>. Ask me any question regarding groundwater levels, rainfall forecasts, location status, water quality parameters, or CGWB reports.</p>
             </div>
         </div>
 
         <div class="chat-input-container">
             <form id="chat-form">
                 <div class="chat-input-box">
-                    <button type="button" id="voice-btn" style="background:none; border:none; cursor:pointer; font-size:1.25rem;">🎤</button>
-                    <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
-                    <button type="submit" class="btn-send">Send</button>
+                    <button type="button" id="voice-btn" style="background:none; border:none; cursor:pointer; font-size:1.1rem;" title="Dictate question">🎤</button>
+                    <input type="text" id="chat-input" placeholder="Ask about groundwater, rainfall forecast, location status, or reports..." autocomplete="off">
+                    <button type="submit" class="btn btn-register" style="padding: 0.55rem 1.35rem; font-size: 0.9rem;">Send</button>
+                    <button type="button" id="download-chat-btn" style="background: white; border:1px solid #cbd5e1; border-radius: 10px; padding: 0.55rem 0.85rem; font-size: 0.8rem; font-weight: 600; cursor:pointer; color: #334155;" title="Export Transcript">📄 Export</button>
                 </div>
             </form>
             <div class="chat-suggestions">
-                <div class="suggestion-item">What is INGRES?</div>
-                <div class="suggestion-item">Groundwater level in Coimbatore</div>
-                <div class="suggestion-item">Government schemes</div>
+                <div class="suggestion-item">What is the exact details of ground water level in Tamil Nadu state wise?</div>
+                <div class="suggestion-item">Will rainfall improve groundwater recharge in Chennai this week?</div>
+                <div class="suggestion-item">Show groundwater status near Vellore</div>
+                <div class="suggestion-item">Water quality parameters in Salem</div>
             </div>
         </div>
     </main>
 
     <script type="module">
-        import { auth, onAuthStateChanged, signOut } from './js/auth.js';
-
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'login.html';
-            }
-        });
-
-        document.getElementById('logout-btn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error("Logout error:", error);
-            }
-        });
+        import APIClient from './js/api.js';
 
         const chatForm = document.getElementById('chat-form');
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
+        const voiceBtn = document.getElementById('voice-btn');
+        const downloadBtn = document.getElementById('download-chat-btn');
+        let currentConversationId = null;
+        let msgCounter = 0;
 
-        function addMessage(role, text) {
-            const div = document.createElement('div');
-            div.className = `msg msg-${role}`;
-            div.innerHTML = text.replace(/\n/g, '<br>');
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        // Speech Recognition (Voice Input)
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+
+            voiceBtn.addEventListener('click', () => {
+                try {
+                    voiceBtn.style.transform = 'scale(1.15)';
+                    recognition.start();
+                } catch (e) {
+                    recognition.stop();
+                    voiceBtn.style.transform = 'scale(1)';
+                }
+            });
+
+            recognition.onresult = (event) => {
+                chatInput.value = event.results[0][0].transcript;
+                voiceBtn.style.transform = 'scale(1)';
+            };
+
+            recognition.onerror = () => voiceBtn.style.transform = 'scale(1)';
+            recognition.onend = () => voiceBtn.style.transform = 'scale(1)';
+        } else {
+            voiceBtn.style.display = 'none';
         }
 
-        const chatResponses = [
-            {
-                keywords: ["hi", "hello", "hey"],
-                response: "Hello! Welcome to the INGRES Virtual Assistant. I can help you with groundwater information, borewell data, rainfall, water quality, recharge methods, and government schemes. How can I assist you today?"
-            },
-            {
-                keywords: ["what is ingres"],
-                response: "INGRES (Integrated Groundwater Information Retrieval System) is a platform that provides groundwater-related information such as water levels, water quality, borewell details, rainfall data, aquifer information, and groundwater management resources."
-            },
-            {
-                keywords: ["groundwater level", "coimbatore"],
-                response: "Based on the available INGRES data, the groundwater level for Coimbatore can be viewed for different monitoring stations. Please specify the area or village for more accurate information."
-            },
-            {
-                keywords: ["safe for drinking", "water quality"],
-                response: "Water quality depends on parameters such as pH, Total Dissolved Solids (TDS), fluoride, nitrate, and hardness. Please provide the location so I can retrieve the relevant information."
-            },
-            {
-                keywords: ["register", "borewell"],
-                response: "Borewell registration is handled by the respective groundwater authority. You can visit the official portal or contact the district groundwater office for the application process."
-            },
-            {
-                keywords: ["rainfall", "karur"],
-                response: "The rainfall records for Karur can be viewed monthly or annually. Would you like the latest rainfall data or historical trends?"
-            },
-            {
-                keywords: ["recharge", "groundwater"],
-                response: "Effective groundwater recharge methods include:\n• Rainwater harvesting\n• Recharge pits\n• Recharge wells\n• Percolation ponds\n• Check dams\n• Recharge trenches"
-            },
-            {
-            return msgDiv;
+        // Export Chat Transcript
+        downloadBtn?.addEventListener('click', () => {
+            const messages = Array.from(document.querySelectorAll('.msg')).map(m => {
+                const role = m.classList.contains('msg-user') ? 'User' : 'INGRES Assistant';
+                const text = m.innerText.split('RELEVANT SOURCES')[0].split('💡 Recommended Follow-Up')[0].trim();
+                return `${role}:\n${text}`;
+            }).join('\n\n------------------------------------------------------------\n\n');
+            const blob = new Blob([`INGRES Virtual Assistant Chat Transcript\nExported: ${new Date().toLocaleString()}\n\n${messages}`], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `ingres_chat_transcript_${Date.now()}.txt`;
+            a.click();
+        });
+
+        function parseMarkdownToHTML(text, role) {
+            if (role === 'user') {
+                return text.replace(/\n/g, '<br>');
+            }
+
+            let lines = text.split('\n');
+            let formattedHTML = '';
+            let inTable = false;
+            let tableHeaderDone = false;
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+
+                if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+                    let cells = trimmed.split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+                    if (trimmed.includes(':---') || trimmed.includes('---')) {
+                        // Table divider line - skip
+                        return;
+                    }
+                    if (!inTable) {
+                        inTable = true;
+                        tableHeaderDone = false;
+                        formattedHTML += '<div class="msg-table-container"><table class="msg-table"><thead><tr>';
+                        cells.forEach(cell => {
+                            let textCell = cell.replace(/\*\*(.*?)\*\*/g, '<strong class="highlight-bold">$1</strong>');
+                            formattedHTML += `<th>${textCell}</th>`;
+                        });
+                        formattedHTML += '</tr></thead><tbody>';
+                        tableHeaderDone = true;
+                    } else {
+                        formattedHTML += '<tr>';
+                        cells.forEach(cell => {
+                            let textCell = cell.replace(/\*\*(.*?)\*\*/g, '<strong class="highlight-bold">$1</strong>');
+                            formattedHTML += `<td>${textCell}</td>`;
+                        });
+                        formattedHTML += '</tr>';
+                    }
+                    return;
+                } else if (inTable) {
+                    inTable = false;
+                    formattedHTML += '</tbody></table></div>';
+                }
+
+                if (trimmed.startsWith('---')) {
+                    formattedHTML += '<hr class="hr-divider">';
+                } else if (trimmed.startsWith('### ')) {
+                    formattedHTML += `<h3>${trimmed.replace('### ', '')}</h3>`;
+                } else if (trimmed.startsWith('#### ')) {
+                    formattedHTML += `<h4>${trimmed.replace('#### ', '')}</h4>`;
+                } else if (trimmed.startsWith('• ') || trimmed.startsWith('- ')) {
+                    let bulletText = trimmed.substring(2);
+                    bulletText = bulletText.replace(/\*\*(.*?)\*\*/g, '<strong class="highlight-bold">$1</strong>');
+                    formattedHTML += `
+                        <div class="msg-bullet-row">
+                            <span class="msg-bullet-icon">•</span>
+                            <div>${bulletText}</div>
+                        </div>`;
+                } else if (/^\d+\.\s/.test(trimmed)) {
+                    let match = trimmed.match(/^(\d+)\.\s(.*)/);
+                    let num = match[1];
+                    let numText = match[2].replace(/\*\*(.*?)\*\*/g, '<strong class="highlight-bold">$1</strong>');
+                    formattedHTML += `
+                        <div class="msg-num-row">
+                            <span class="num-badge">${num}</span>
+                            <div>${numText}</div>
+                        </div>`;
+                } else if (trimmed.length > 0) {
+                    let textLine = trimmed.replace(/\*\*(.*?)\*\*/g, '<strong class="highlight-bold">$1</strong>');
+                    formattedHTML += `<p style="margin-bottom: 0.4rem;">${textLine}</p>`;
+                }
+            });
+
+            if (inTable) {
+                formattedHTML += '</tbody></table></div>';
+            }
+
+            return formattedHTML;
+        }
+
+        function addMessage(role, text, sources = [], metadata = {}) {
+            msgCounter++;
+            const div = document.createElement('div');
+            div.className = `msg msg-${role}`;
+            
+            let extractedFollowUps = [];
+            if (role === 'ai') {
+                const followUpRegex = /\*\*?Follow-Up Questions:?\*\*?([\s\S]*)/i;
+                const match = text.match(followUpRegex);
+                if (match) {
+                    text = text.replace(followUpRegex, '').trim();
+                    const qMatch = match[1].match(/\d+\.\s+([^\n]+)/g);
+                    if (qMatch) {
+                        extractedFollowUps = qMatch.map(q => q.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim());
+                    }
+                }
+            }
+            
+            let contentHTML = parseMarkdownToHTML(text, role);
+
+            // 1. Weather Widget Card (Sleek)
+            if (role === 'ai' && metadata.weather_data) {
+                const w = metadata.weather_data;
+                const locName = (metadata.location_data && metadata.location_data.name) ? metadata.location_data.name : 'Region';
+                
+                let barsHTML = '';
+                if (w.daily_forecast && w.daily_forecast.length > 0) {
+                    const maxRain = Math.max(...w.daily_forecast.map(d => d.rain_mm), 1.0);
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    
+                    barsHTML = w.daily_forecast.map(d => {
+                        const pct = Math.min(100, Math.max(12, (d.rain_mm / maxRain) * 100));
+                        let label = d.date;
+                        try {
+                            const parsedDt = new Date(d.date);
+                            if (!isNaN(parsedDt.getTime())) {
+                                label = `${dayNames[parsedDt.getDay()]} ${parsedDt.getDate()}`;
+                            } else if (d.date.length >= 10) {
+                                label = d.date.substring(5, 10);
+                            }
+                        } catch (e) {
+                            label = d.date.length >= 10 ? d.date.substring(5, 10) : d.date;
+                        }
+
+                        return `
+                            <div class="forecast-col" title="${d.rain_mm} mm rain on ${d.date}">
+                                <span class="forecast-val">${d.rain_mm > 0 ? d.rain_mm + 'm' : '0'}</span>
+                                <div class="forecast-bar-wrap">
+                                    <div class="forecast-bar" style="height: ${pct}%;"></div>
+                                </div>
+                                <span class="forecast-date">${label}</span>
+                            </div>`;
+                    }).join('');
+                }
+
+                contentHTML += `
+                    <div class="weather-widget-card">
+                        <div class="weather-header">
+                            <div>
+                                <div style="font-size: 0.72rem; font-weight: 700; color: #94a3b8; text-transform: uppercase;">🌧️ Weather & Forecast</div>
+                                <div style="font-size: 0.95rem; font-weight: 800; color: white;">${locName} • ${w.weather_condition}</div>
+                            </div>
+                            <div class="weather-temp">${w.temperature}°C</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #cbd5e1;">
+                            <span>💧 Humidity: <strong>${w.humidity}%</strong></span>
+                            <span>🌧️ 7-Day Rain: <strong>${w.total_7day_rain_mm} mm</strong></span>
+                        </div>
+                        <div style="margin-top: 0.4rem; font-size: 0.75rem; background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 0.25rem 0.5rem; border-radius: 6px; font-weight: 700;">
+                            🌱 ${w.recharge_impact}
+                        </div>
+                        <div class="forecast-bars">
+                            ${barsHTML}
+                        </div>
+                    </div>`;
+            }
+
+            // 2. Water Quality Grid Widget
+            if (role === 'ai' && metadata.water_quality_data) {
+                const wq = metadata.water_quality_data;
+                contentHTML += `
+                    <div class="water-quality-grid">
+                        <div class="wq-card">
+                            <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">pH LEVEL</div>
+                            <div class="wq-val">${wq.ph}</div>
+                            <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">Optimal</div>
+                        </div>
+                        <div class="wq-card">
+                            <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">TDS (mg/L)</div>
+                            <div class="wq-val">${wq.tds_mg_l}</div>
+                            <div style="font-size: 0.65rem; color: #0284c7; font-weight: 700;">Desirable</div>
+                        </div>
+                        <div class="wq-card">
+                            <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">FLUORIDE</div>
+                            <div class="wq-val">${wq.fluoride_mg_l}</div>
+                            <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">Safe</div>
+                        </div>
+                        <div class="wq-card">
+                            <div style="font-size: 0.7rem; color: #64748b; font-weight: 700;">NITRATE</div>
+                            <div class="wq-val">${wq.nitrate_mg_l}</div>
+                            <div style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">Safe</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 0.4rem; font-size: 0.72rem; color: #475569; font-weight: 600;">
+                        📍 Station: ${wq.sampling_station} • <span style="color: #15803d;">${wq.status}</span>
+                    </div>`;
+            }
+
+            // 3. Leaflet Interactive Map Container
+            const mapContainerId = `map-container-${msgCounter}`;
+            if (role === 'ai' && metadata.location_data && metadata.location_data.latitude) {
+                contentHTML += `
+                    <div style="margin-top: 0.85rem;">
+                        <div style="font-size: 0.78rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 0.3rem;">
+                            📍 Location Map: <strong>${metadata.location_data.name}</strong> (${metadata.location_data.latitude.toFixed(4)}, ${metadata.location_data.longitude.toFixed(4)})
+                        </div>
+                        <div id="${mapContainerId}" class="map-widget-container"></div>
+                    </div>`;
+            }
+
+            // 4. Sources Tags (Rendered ONLY if relevant sources were used)
+            if (role === 'ai' && sources && sources.length > 0) {
+                const pills = sources.map(s => `<span class="source-tag">📄 ${s}</span>`).join('');
+                contentHTML += `
+                    <div class="sources-container">
+                        <span style="font-size: 0.72rem; font-weight: 800; color: #64748b;">RELEVANT SOURCES:</span>
+                        ${pills}
+                    </div>`;
+            }
+
+            // 5. Dynamic Follow-Up Recommendation Chips (Deduplicated Subsequent Options)
+            if (role === 'ai') {
+                let recoChipsHTML = '';
+
+                if (extractedFollowUps.length > 0) {
+                    recoChipsHTML = extractedFollowUps.map(q => `<span class="reco-chip" data-prompt="${q.replace(/"/g, '&quot;')}">💡 ${q}</span>`).join('');
+                } else {
+                    const locName = (metadata.location_data && metadata.location_data.name) ? metadata.location_data.name : '';
+                    if (locName) {
+                        // Do NOT repeat the weather card topic if weather_data was already rendered
+                        if (!metadata.weather_data && metadata.intent !== 'WEATHER') {
+                            recoChipsHTML += `<span class="reco-chip" data-prompt="Will rainfall improve groundwater recharge in ${locName} this week?">🌧️ Rainfall & Weather Forecast for ${locName}</span>`;
+                        }
+                        // Do NOT repeat the water quality topic if water_quality_data was already rendered
+                        if (!metadata.water_quality_data && metadata.intent !== 'WATER_QUALITY') {
+                            recoChipsHTML += `<span class="reco-chip" data-prompt="Water quality parameters in ${locName}">🧪 Water Quality (TDS & Fluoride) for ${locName}</span>`;
+                        }
+                        // Add report query follow-up
+                        if (metadata.intent !== 'DOCUMENT') {
+                            recoChipsHTML += `<span class="reco-chip" data-prompt="What does the CGWB report say about ${locName}?">📄 CGWB Document Findings for ${locName}</span>`;
+                        }
+                    } else if (metadata.intent === 'WEATHER') {
+                        recoChipsHTML += `<span class="reco-chip" data-prompt="Water quality parameters in Chennai">🧪 Check Water Quality Parameters</span>`;
+                        recoChipsHTML += `<span class="reco-chip" data-prompt="Show groundwater status near Vellore">📍 View District Hydrogeological Map</span>`;
+                    } else {
+                        recoChipsHTML += `<span class="reco-chip" data-prompt="What is the exact details of ground water level in Tamil Nadu state wise?">📊 State-Wise Groundwater Breakdown</span>`;
+                        recoChipsHTML += `<span class="reco-chip" data-prompt="Will rainfall improve groundwater recharge in Chennai this week?">🌧️ 7-Day Rainfall Forecast & Recharge</span>`;
+                    }
+                }
+
+                if (recoChipsHTML) {
+                    contentHTML += `
+                        <div style="margin-top: 0.85rem; padding-top: 0.6rem; border-top: 1px dashed #e2e8f0;">
+                            <div style="font-size: 0.72rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem;">💡 Recommended Follow-Up Questions:</div>
+                            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                                ${recoChipsHTML}
+                            </div>
+                        </div>`;
+                }
+            }
+
+            div.innerHTML = contentHTML;
+            chatMessages.appendChild(div);
+
+            // Bind click handlers directly to dynamic follow-up chips
+            div.querySelectorAll('.reco-chip').forEach(chip => {
+                chip.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const prompt = chip.getAttribute('data-prompt');
+                    if (prompt) {
+                        handleQuestionSubmit(prompt);
+                    }
+                });
+            });
+
+            // Initialize Leaflet Map
+            if (role === 'ai' && metadata.location_data && metadata.location_data.latitude) {
+                setTimeout(() => {
+                    const mapEl = document.getElementById(mapContainerId);
+                    if (mapEl && window.L) {
+                        const lat = metadata.location_data.latitude;
+                        const lon = metadata.location_data.longitude;
+                        const map = L.map(mapContainerId).setView([lat, lon], 11);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap'
+                        }).addTo(map);
+                        
+                        L.marker([lat, lon]).addTo(map)
+                            .bindPopup(`<b>${metadata.location_data.name}</b><br>Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`)
+                            .openPopup();
+                    }
+                }, 100);
+            }
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return div;
+        }
+
+        // Dedicated Question Submission Handler
+        async function handleQuestionSubmit(text) {
+            if (!text || !text.trim()) return;
+            const cleanText = text.trim();
+            chatInput.value = '';
+
+            addMessage('user', cleanText);
+            const loadingMsg = addMessage('ai', 'Thinking... Analyzing query & retrieving hydrogeological evidence...');
+
+            try {
+                const res = await APIClient.sendChatMessage(cleanText, currentConversationId);
+                if (res.success && res.data) {
+                    if (res.data.conversation_id) {
+                        currentConversationId = res.data.conversation_id;
+                    }
+                    loadingMsg.remove();
+                    addMessage('ai', res.data.response, res.data.sources_used, {
+                        location_data: res.data.location_data,
+                        weather_data: res.data.weather_data,
+                        water_quality_data: res.data.water_quality_data
+                    });
+                } else {
+                    loadingMsg.innerHTML = "Error: " + (res.message || "Failed to generate response.");
+                }
+            } catch (err) {
+                loadingMsg.innerHTML = "API Error: " + err.message + ". Please ensure backend server is running.";
+            }
         }
 
         // Load Past Chat History
@@ -249,11 +827,14 @@
             try {
                 const res = await APIClient.getChatHistory();
                 if (res.success && res.data && res.data.length > 0) {
-                    // Reverse to show oldest first
                     const history = res.data.slice().reverse();
                     history.forEach(item => {
                         addMessage('user', item.question);
-                        addMessage('ai', item.response);
+                        addMessage('ai', item.response, item.sources_used, {
+                            location_data: item.location_data,
+                            weather_data: item.weather_data,
+                            water_quality_data: item.water_quality_data
+                        });
                     });
                 }
             } catch (err) {
@@ -262,37 +843,44 @@
         }
         loadHistory();
 
-        chatForm.addEventListener('submit', async (e) => {
+        chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const text = chatInput.value.trim();
-            if (!text) return;
-
-            addMessage('user', text);
-            chatInput.value = '';
-
-            const loadingMsg = addMessage('ai', 'Thinking... Searching INGRES Knowledge Base & Generating Answer...');
-
-            try {
-                const res = await APIClient.sendChatMessage(text, currentConversationId);
-                if (res.success && res.data) {
-                    if (res.data.conversation_id) {
-                        currentConversationId = res.data.conversation_id;
-                    }
-                    loadingMsg.remove();
-                    addMessage('ai', res.data.response, res.data.sources_used);
-                } else {
-                    loadingMsg.textContent = "Error: " + (res.message || "Failed to generate AI response.");
-                }
-            } catch (err) {
-                loadingMsg.textContent = "API Error: " + err.message + ". Please ensure backend server is running.";
-            }
+            handleQuestionSubmit(chatInput.value);
         });
 
-        document.querySelectorAll('.suggestion-item').forEach(item => {
-            item.addEventListener('click', () => {
-                chatInput.value = item.textContent;
-                chatForm.dispatchEvent(new Event('submit'));
-            });
+        // Fetch dynamic suggestions based on uploaded documents
+        async function loadDynamicSuggestions() {
+            try {
+                const docs = await APIClient.listDocuments();
+                const suggestionsContainer = document.querySelector('.chat-suggestions');
+                if (docs && docs.data && docs.data.length > 0) {
+                    suggestionsContainer.innerHTML = '';
+                    const recentDocs = docs.data.slice(0, 4);
+                    recentDocs.forEach(doc => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = `Summarize findings from ${doc.title}`;
+                        div.addEventListener('click', () => handleQuestionSubmit(div.textContent));
+                        suggestionsContainer.appendChild(div);
+                    });
+                } else {
+                    document.querySelectorAll('.suggestion-item').forEach(item => {
+                        item.addEventListener('click', () => handleQuestionSubmit(item.textContent));
+                    });
+                }
+            } catch(e) {
+                console.error("Could not load dynamic suggestions", e);
+                document.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', () => handleQuestionSubmit(item.textContent));
+                });
+            }
+        }
+        loadDynamicSuggestions();
+
+        document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await APIClient.logout();
+            window.location.href = 'login.html';
         });
     </script>
 </body>

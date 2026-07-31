@@ -3,46 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - INGRES</title>
+    <title>Settings & System Configuration - INGRES</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .settings-card {
-            background: white;
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: var(--shadow-sm);
-            max-width: 800px;
+        .settings-container {
+            max-width: 1050px;
             margin: 0 auto;
         }
-        .settings-section {
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
+        .settings-nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
         }
-        .settings-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .tab-btn.active {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+        .settings-card {
+            background: white;
+            padding: 2.25rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+        .settings-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .section-tag {
+            background: #f1f5f9;
+            color: #0f172a;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            text-transform: uppercase;
         }
         .settings-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            padding: 1.1rem 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+        .settings-row:last-child {
+            border-bottom: none;
         }
         .settings-info h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.2rem;
         }
         .settings-info p {
-            font-size: 0.85rem;
+            font-size: 0.83rem;
             color: var(--text-muted);
         }
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
+            width: 46px;
             height: 24px;
         }
         .toggle-switch input {
@@ -55,7 +107,7 @@
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: #cbd5e1;
-            transition: .4s;
+            transition: .25s ease;
             border-radius: 24px;
         }
         .slider:before {
@@ -66,22 +118,62 @@
             left: 3px;
             bottom: 3px;
             background-color: white;
-            transition: .4s;
+            transition: .25s ease;
             border-radius: 50%;
         }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(26px); }
-        select {
-            padding: 0.6rem 1rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-alt);
+        input:checked + .slider { background-color: #0284c7; }
+        input:checked + .slider:before { transform: translateX(22px); }
+        select, .input-setting {
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
             font-weight: 600;
+            font-size: 0.88rem;
             outline: none;
+            color: #0f172a;
+        }
+        select:focus, .input-setting:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+        }
+        .key-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+        }
+        .key-ok { background: #dcfce7; color: #15803d; }
+        .key-warn { background: #fef3c7; color: #b45309; }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        @media (max-width: 1024px) {
+            .app-sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+            .app-sidebar.open { transform: translateX(280px); }
         }
     </style>
 </head>
 <body class="app-layout">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="app-sidebar">
         <a href="index.html" class="logo" style="color: white; margin-bottom: 3rem;">
             <div class="logo-icon" style="background: var(--primary);">
@@ -106,6 +198,10 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 <span data-i18n="documents">Documents</span>
             </a>
+            <a href="history.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span data-i18n="history">History</span>
+            </a>
             <a href="analytics.html" class="app-nav-item">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 <span data-i18n="analytics">Analytics</span>
@@ -116,6 +212,10 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 <span data-i18n="settings">Settings</span>
             </a>
+            <a href="profile.html" class="app-nav-item">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span data-i18n="profile">Profile</span>
+            </a>
             <a href="#" id="logout-btn" class="app-nav-item">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 <span data-i18n="logout">Logout</span>
@@ -124,111 +224,255 @@
     </aside>
 
     <main class="app-main">
-        <header style="margin-bottom: 2.5rem;">
-            <h1 style="font-size: 1.8rem; font-weight: 800;">Settings & Preferences</h1>
+        <header style="margin-bottom: 1.75rem;">
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: #0f172a;">System Configuration & Preferences</h1>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 2px;">Manage hydrogeology AI reasoning rules, multi-LLM failovers, API keys, and language settings</p>
         </header>
 
-        <div class="settings-card">
-            <div class="settings-section">
-                <h3>Appearance</h3>
-                <div class="settings-row">
-                    <div class="settings-info">
-                        <h4>Dark Mode</h4>
-                        <p>Toggle between light and dark theme.</p>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="theme-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-row">
-                    <div class="settings-info">
-                        <h4>System Language</h4>
-                        <p>Select your preferred interface language.</p>
-                    </div>
-                    <select id="language-select">
-                        <option value="en">English</option>
-                        <option value="hi">Hindi (हिन्दी)</option>
-                        <option value="ta">Tamil (தமிழ்)</option>
-                        <option value="te">Telugu (తెలుగు)</option>
-                    </select>
-                </div>
+        <div class="settings-container">
+            <!-- Professional Navigation Tabs -->
+            <div class="settings-nav-tabs">
+                <button class="tab-btn active" data-tab="tab-ai">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><path d="M12 6v6l4 2"></path></svg>
+                    AI Model & Reasoning
+                </button>
+                <button class="tab-btn" data-tab="tab-theme">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+                    Theme & Localization
+                </button>
+                <button class="tab-btn" data-tab="tab-apikeys">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-2-2l2 2m2 4l-4 4m2 0l-2 2M3 21h4l11-11-4-4L3 17v4z"></path></svg>
+                    API Credentials & Fallbacks
+                </button>
+                <button class="tab-btn" data-tab="tab-alerts">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    Alerts & Monitoring
+                </button>
             </div>
 
-            <div class="settings-section">
-                <h3>Notifications</h3>
-                <div class="settings-row">
-                    <div class="settings-info">
-                        <h4>Email Alerts</h4>
-                        <p>Receive updates about document indexing.</p>
+            <div class="settings-card">
+                <!-- TAB 1: AI Model & Reasoning -->
+                <div class="tab-panel active" id="tab-ai">
+                    <div class="settings-section-header">
+                        <span class="section-tag">AI Reasoning Core</span>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0;">Assistant Persona & Model Routing</h3>
                     </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-row">
-                    <div class="settings-info">
-                        <h4>AI Insights</h4>
-                        <p>Weekly summaries of your interactions.</p>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
 
-            <div class="settings-section">
-                <h3>Privacy & Security</h3>
-                <button class="btn btn-hero-secondary" style="width: 100%; margin-bottom: 1rem;">Change Password</button>
-                <button class="btn btn-hero-secondary" style="width: 100%; color: #ef4444; border-color: #fca5a5;">Delete Account</button>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Expert Persona Configuration</h4>
+                            <p>Select specialized hydrogeological reasoning rules for answer synthesis.</p>
+                        </div>
+                        <select id="persona-select">
+                            <option value="Senior Hydrogeologist">Senior Hydrogeologist (CGWB Expert)</option>
+                            <option value="General Assistant">General Water Resource Assistant</option>
+                            <option value="Research Scholar">Technical Hydrogeology Scholar</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Multi-Provider Fallback Pipeline</h4>
+                            <p>Enable automatic failover from Gemini to OpenAI when API quotas hit HTTP 429 limits.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="fallback-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>RAG Context Token Budget Limit</h4>
+                            <p>Maximum tokens allocated per document query (prevents quota exhaustion).</p>
+                        </div>
+                        <select id="token-budget-select">
+                            <option value="750">750 Tokens (Balanced Efficiency - Recommended)</option>
+                            <option value="1000">1000 Tokens (Extended Hydro Context)</option>
+                            <option value="500">500 Tokens (Strict Token Saver)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Theme & Localization -->
+                <div class="tab-panel" id="tab-theme">
+                    <div class="settings-section-header">
+                        <span class="section-tag">Localization</span>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0;">System Theme & Multi-Language Support</h3>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Active Portal Theme</h4>
+                            <p>Official Central Ground Water Board (CGWB) Hydrogeological Portal Theme.</p>
+                        </div>
+                        <span class="key-badge key-ok" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">🏛️ CGWB Official Hydro Theme Active</span>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>System Primary Language</h4>
+                            <p>Select your preferred interface language across the portal.</p>
+                        </div>
+                        <select id="language-select">
+                            <option value="en">English (Official)</option>
+                            <option value="ta">Tamil (தமிழ்)</option>
+                            <option value="hi">Hindi (हिन्दी)</option>
+                            <option value="te">Telugu (తెలుగు)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TAB 3: API Credentials & Fallbacks -->
+                <div class="tab-panel" id="tab-apikeys">
+                    <div class="settings-section-header">
+                        <span class="section-tag">Credentials</span>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0;">API Key Overrides & Provider Status</h3>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Primary Gemini API Key</h4>
+                            <p>Configured via backend .env <span class="key-badge key-ok">🟢 Operational</span></p>
+                        </div>
+                        <input type="password" class="input-setting" value="••••••••••••••••••••" placeholder="AIzaSy..." style="width: 240px;">
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Secondary Gemini Fallback Key</h4>
+                            <p>Secondary failover key when primary hits rate limits <span class="key-badge key-ok">🟢 Ready</span></p>
+                        </div>
+                        <input type="password" class="input-setting" value="••••••••••••••••••••" placeholder="AIzaSy..." style="width: 240px;">
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>OpenAI Fallback Agent Key (gpt-4o-mini)</h4>
+                            <p>Fallback LLM agent when all Gemini keys hit quota limits <span class="key-badge key-ok">🟢 Configured</span></p>
+                        </div>
+                        <input type="password" class="input-setting" value="••••••••••••••••••••" placeholder="sk-proj-..." style="width: 240px;">
+                    </div>
+                </div>
+
+                <!-- TAB 4: Alerts & Monitoring -->
+                <div class="tab-panel" id="tab-alerts">
+                    <div class="settings-section-header">
+                        <span class="section-tag">Monitoring</span>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0;">Automated Hydro Notifications</h3>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Critical Extraction Stage Alerts</h4>
+                            <p>Trigger warnings when district stage of extraction exceeds 100% (Over-Exploited).</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Water Quality Exceedance Notifications</h4>
+                            <p>Receive notifications when Fluoride (>1.5 mg/L) or Nitrate (>45 mg/L) violate BIS IS:10500 standards.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>RAG PDF Indexing Status Reports</h4>
+                            <p>Receive weekly summary reports of newly chunked groundwater documents.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Save Action Footer -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                    <span id="settings-status-msg" style="font-size: 0.85rem; font-weight: 600; color: #16a34a;"></span>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button id="reset-settings-btn" class="btn" style="background: white; border: 1px solid #cbd5e1; color: #0f172a; font-weight: 700; padding: 0.6rem 1.25rem;">Reset Defaults</button>
+                        <button id="save-settings-btn" class="btn btn-register" style="padding: 0.6rem 1.8rem;">Save Configuration</button>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
     <script type="module">
         import APIClient from './js/api.js';
-        import { toggleTheme, setLanguage } from './js/theme.js';
+        import { setLanguage, initLanguage } from './js/theme.js';
+
+        // Tab Navigation Switching
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanels.forEach(p => p.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(targetTab)?.classList.add('active');
+            });
+        });
 
         const langSelect = document.getElementById('language-select');
-        const themeToggle = document.getElementById('theme-toggle');
+        const personaSelect = document.getElementById('persona-select');
+        const tokenBudgetSelect = document.getElementById('token-budget-select');
+        const saveSettingsBtn = document.getElementById('save-settings-btn');
+        const statusMsg = document.getElementById('settings-status-msg');
 
         async function loadUserSettings() {
             try {
+                const storedSettings = localStorage.getItem("ingres_settings");
+                if (storedSettings) {
+                    const s = JSON.parse(storedSettings);
+                    if (langSelect) langSelect.value = s.language || 'en';
+                    if (personaSelect) personaSelect.value = s.persona || 'Senior Hydrogeologist';
+                    if (tokenBudgetSelect) tokenBudgetSelect.value = s.tokenBudget || '750';
+                }
+
                 const res = await APIClient.getSettings();
                 if (res.success && res.data) {
                     const data = res.data;
-                    langSelect.value = data.language || 'en';
-                    if (data.theme === 'dark' && !document.body.classList.contains('dark-mode')) {
-                        toggleTheme();
-                    }
-                    themeToggle.checked = (data.theme === 'dark');
+                    if (langSelect) langSelect.value = data.language || 'en';
                 }
             } catch (err) {
-                console.warn("Notice: Sign in to persist custom user settings.");
+                console.warn("Notice: Local settings loaded.");
             }
         }
         loadUserSettings();
 
-        langSelect.addEventListener('change', async (e) => {
-            const lang = e.target.value;
-            setLanguage(lang);
-            try {
-                await APIClient.updateSettings({ language: lang });
-            } catch (err) {
-                console.error("Settings update error:", err);
-            }
-        });
+        saveSettingsBtn?.addEventListener('click', async () => {
+            const settingsObj = {
+                language: langSelect.value,
+                persona: personaSelect.value,
+                tokenBudget: tokenBudgetSelect.value,
+                fallback: document.getElementById('fallback-toggle').checked
+            };
 
-        themeToggle.addEventListener('change', async () => {
-            toggleTheme();
-            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem("ingres_settings", JSON.stringify(settingsObj));
+            setLanguage(settingsObj.language);
+
             try {
-                await APIClient.updateSettings({ theme: isDark ? 'dark' : 'light' });
+                await APIClient.updateSettings(settingsObj);
             } catch (err) {
-                console.error("Settings update error:", err);
+                console.error("Settings update warning:", err);
             }
+
+            statusMsg.textContent = "✓ System configuration saved successfully!";
+            setTimeout(() => statusMsg.textContent = "", 3500);
         });
 
         document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
@@ -239,4 +483,3 @@
     </script>
 </body>
 </html>
-

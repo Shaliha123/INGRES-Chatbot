@@ -1,5 +1,8 @@
-// INGRES Live Backend API Client Module
-const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+const getApiBaseUrl = () => {
+  const host = (typeof window !== "undefined" && window.location && window.location.hostname) ? window.location.hostname : "127.0.0.1";
+  return `http://${host}:8000/api/v1`;
+};
+const API_BASE_URL = getApiBaseUrl();
 
 function formatErrorMessage(data, status) {
   if (!data) return `HTTP ${status} Error`;
@@ -63,13 +66,24 @@ export class APIClient {
       }
 
       if (!response.ok) {
+        if (response.status === 401 && !endpoint.includes("/login") && !endpoint.includes("/register")) {
+          this.removeAuthToken();
+          if (!window.location.pathname.includes("login.html") && !window.location.pathname.includes("register.html")) {
+            alert("Your session has expired or authentication failed. Please sign in.");
+            window.location.href = "login.html";
+          }
+        }
         const errorMsg = formatErrorMessage(data, response.status);
         throw new Error(errorMsg);
       }
 
+
       return data;
     } catch (err) {
       console.error(`API Request Error [${method} ${endpoint}]:`, err);
+      if (err.name === 'TypeError' && err.message && err.message.toLowerCase().includes('fetch')) {
+        throw new Error(`Cannot connect to INGRES backend server at ${API_BASE_URL}. Please verify the Uvicorn server is running.`);
+      }
       throw err;
     }
   }

@@ -9,8 +9,13 @@ from backend.app.routers import auth, users, knowledge, documents, chat, analyti
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await connect_to_mongo()
+    from backend.app.services.intent_service import load_dynamic_entities
+    await load_dynamic_entities()
     yield
     await close_mongo_connection()
+
+from fastapi import Request
+from fastapi.responses import JSONResponse
 
 app = FastAPI(
     title="INGRES Virtual Assistant API",
@@ -19,9 +24,16 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"success": False, "message": f"Internal Server Error: {str(exc)}", "data": None}
+    )
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[settings.FRONTEND_URL] if settings.FRONTEND_URL != "*" else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

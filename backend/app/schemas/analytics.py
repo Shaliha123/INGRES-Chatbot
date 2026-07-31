@@ -13,3 +13,6 @@ class AnalyticsDetail(BaseModel):
     recent_chats_count: int
     recent_documents_count: int
     category_distribution: Dict[str, int]
+    intent_distribution: Dict[str, int]
+    weekly_activity: Dict[str, int]
+    chunk_count: int

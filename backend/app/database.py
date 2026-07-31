@@ -1,3 +1,4 @@
+import certifi
 import logging
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo import MongoClient, ASCENDING, DESCENDING
@@ -16,11 +17,17 @@ def get_database():
 
 async def connect_to_mongo():
     logger.info(f"Connecting to MongoDB Atlas database: {settings.DATABASE_NAME}...")
-    db.client = AsyncIOMotorClient(settings.MONGODB_URI)
+    
+    # Motor async client configuration with certifi CA bundle
+    client_kwargs = {}
+    if "mongodb+srv://" in settings.MONGODB_URI or "tls=true" in settings.MONGODB_URI.lower() or "ssl=true" in settings.MONGODB_URI.lower():
+        client_kwargs["tlsCAFile"] = certifi.where()
+
+    db.client = AsyncIOMotorClient(settings.MONGODB_URI, serverSelectionTimeoutMS=5000, **client_kwargs)
     db.db = db.client[settings.DATABASE_NAME]
     
     # Initialize collections and indexes synchronously via PyMongo client to ensure setup
-    sync_client = MongoClient(settings.MONGODB_URI)
+    sync_client = MongoClient(settings.MONGODB_URI, serverSelectionTimeoutMS=5000, **client_kwargs)
     sync_db = sync_client[settings.DATABASE_NAME]
     
     # Setup indexes as per 31_Database_Indexes.md
@@ -43,10 +50,15 @@ async def connect_to_mongo():
         # documents collection
         sync_db.documents.create_index([("uploaded_by", ASCENDING)])
         sync_db.documents.create_index([("upload_date", DESCENDING)])
+        sync_db.documents.create_index([("$**", "text")]) # Text index for semantic text search
         
         # analytics collection
         sync_db.analytics.create_index([("last_updated", DESCENDING)])
         
+        # groundwater_records collection
+        sync_db.groundwater_records.create_index([("district", ASCENDING)])
+        sync_db.groundwater_records.create_index([("year", DESCENDING)])
+
         # logs collection
         sync_db.logs.create_index([("user_id", ASCENDING)])
         sync_db.logs.create_index([("timestamp", DESCENDING)])
@@ -56,8 +68,8 @@ async def connect_to_mongo():
         
         logger.info("MongoDB Atlas connection established and indexes verified successfully.")
     except Exception as e:
-        logger.error(f"Error setting up MongoDB indexes: {e}")
-        raise e
+        logger.error(f"Failed to initialize database indexes: {e}")
+        pass
     finally:
         sync_client.close()
 

@@ -55,7 +55,7 @@
         }
         .kb-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
         }
         .article-card {
@@ -137,6 +137,8 @@
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 <span data-i18n="logout">Logout</span>
             </a>
+        </div>
+    </aside>
 
     <main class="app-main">
         <div class="kb-search-hero">
@@ -153,7 +155,7 @@
             <div class="category-chip" data-cat="Hydrology Data">Hydrology Data</div>
             <div class="category-chip" data-cat="Rules & Policies">Rules & Policies</div>
             <div class="category-chip" data-cat="Water Quality">Water Quality</div>
-            <div class="category-chip" data-cat="User Manuals">User Manuals</div>
+            <div class="category-chip" data-cat="Document Import">Document Import</div>
         </div>
 
         <div class="kb-grid" id="kb-grid-container">
@@ -174,7 +176,12 @@
                 const res = await APIClient.listKnowledge(q, category);
                 if (res.success && res.data && res.data.length > 0) {
                     container.innerHTML = '';
+                    const seenTitles = new Set();
                     res.data.forEach(item => {
+                        const key = (item.title || "").trim().toLowerCase();
+                        if (seenTitles.has(key)) return;
+                        seenTitles.add(key);
+
                         const card = document.createElement('div');
                         card.className = 'article-card';
                         card.innerHTML = `
@@ -185,6 +192,7 @@
                         `;
                         container.appendChild(card);
                     });
+
                 } else {
                     container.innerHTML = '<div style="color: var(--text-muted);">No knowledge base articles found matching your query.</div>';
                 }
@@ -225,4 +233,3 @@
     </script>
 </body>
 </html>
-

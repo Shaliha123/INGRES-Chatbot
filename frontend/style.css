@@ -1,24 +1,42 @@
-﻿/* Global layout and theme based on INGRES exact design */
+/* Global layout and theme based on INGRES official hydrogeological portal design */
 :root {
-    --primary: #4f46e5;
-    --primary-dark: #3730a3;
-    --primary-light: #eef2ff;
+    /* Official Enterprise Hydro Palette */
+    --bg-canvas: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-subtle: #f1f5f9;
+    --bg-sidebar: #0f172a;
+    --bg-header: rgba(255, 255, 255, 0.95);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+    --border-subtle: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --brand-primary: #0284c7;
+    --brand-hover: #0369a1;
+    --brand-light: #f0f9ff;
+    --brand-text: #ffffff;
+    --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    
+    /* Legacy Variable Map */
+    --primary: var(--brand-primary);
+    --primary-dark: var(--brand-hover);
+    --primary-light: var(--brand-light);
     --secondary: #1e40af;
-    --bg-light: #ffffff;
-    --bg-alt: #f8fafc;
-    --bg-dark: #0f172a;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border-color: #e2e8f0;
-    --border: #e2e8f0;
+    --bg-light: var(--bg-canvas);
+    --bg-alt: var(--bg-surface-subtle);
+    --bg-dark: var(--bg-sidebar);
+    --text-main: var(--text-primary);
+    --text-muted: var(--text-secondary);
+    --border-color: var(--border-subtle);
+    --border: var(--border-subtle);
     --white: #ffffff;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-sm: var(--card-shadow);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
     --radius: 12px;
-    --radius-lg: 24px;
-    --radius-xl: 40px;
-    --max-width: 1200px;
+    --radius-lg: 20px;
+    --radius-xl: 32px;
+    --max-width: 1240px;
 }
 
 * {
@@ -29,10 +47,11 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-main);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
     line-height: 1.5;
     overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 a {
@@ -1296,6 +1315,104 @@ body.dark-mode .action-btn {
     cursor: pointer;
 }
 
+/* Auth Pages Desktop & Mobile Responsive Layout */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-y: auto;
+}
+
+.auth-welcome-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(3rem, 12vw, 10rem);
+    font-weight: 900;
+    color: rgba(2, 132, 199, 0.04);
+    letter-spacing: 0.08em;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+}
+
+.auth-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 460px;
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid #e2e8f0;
+    padding: 2.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    margin: auto;
+}
+
+.auth-title h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.auth-title p {
+    font-size: 0.88rem;
+    color: #64748b;
+    text-align: center;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+}
+
+.form-field label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.form-field input {
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-field input:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.btn-auth-submit {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: #0284c7;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.btn-auth-submit:hover {
+    background: #0369a1;
+}
+
 @media (max-width: 640px) {
     .hero-content h1 {
         font-size: 2.5rem;
@@ -1314,7 +1431,7 @@ body.dark-mode .action-btn {
     }
 
     .auth-card {
-        padding: 2rem 1.5rem;
+        padding: 1.75rem 1.25rem;
     }
 
     .dash-promotional-banner {

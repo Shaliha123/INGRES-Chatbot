@@ -6,61 +6,45 @@
     <title>Documents - INGRES</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" src="js/theme.js"></script>
     <style>
         .doc-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
         .upload-zone {
-            border: 2px dashed var(--border-color);
-            background: white;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
             padding: 3rem;
             text-align: center;
-            border-radius: 24px;
-            margin-bottom: 3rem;
+            background: #ffffff;
+            margin-bottom: 2rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
         }
         .upload-zone:hover {
             border-color: var(--primary);
-            background: var(--bg-alt);
+            background: #f0f9ff;
         }
         .doc-table {
             width: 100%;
+            border-collapse: collapse;
             background: white;
-            border-radius: 24px;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
+        }
+        .doc-table th, .doc-table td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
         }
         .doc-table th {
-            text-align: left;
-            padding: 1.25rem 2rem;
-            background: var(--bg-alt);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .doc-table td {
-            padding: 1.25rem 2rem;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-        .status-badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
+            background: #f8fafc;
             font-weight: 700;
-        }
-        .status-done { background: #d1fae5; color: #065f46; }
-        .status-process { background: #fef3c7; color: #92400e; }
-        .ai-summary-btn {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 0.5rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 600;
@@ -161,7 +145,10 @@
                 const res = await APIClient.listDocuments();
                 if (res.success && res.data && res.data.length > 0) {
                     docBody.innerHTML = '';
+                    const seenIds = new Set();
                     res.data.forEach(doc => {
+                        if (seenIds.has(doc.id)) return;
+                        seenIds.add(doc.id);
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td style="font-weight: 600;">${doc.title || doc.filename}</td>
@@ -172,6 +159,7 @@
                         `;
                         docBody.appendChild(row);
                     });
+
 
                     document.querySelectorAll('.btn-delete-doc').forEach(btn => {
                         btn.addEventListener('click', async () => {
@@ -193,14 +181,70 @@
 
         dropZone.addEventListener('click', () => fileInput.click());
 
-        fileInput.addEventListener('change', async (e) => {
-            const files = e.target.files;
-            if (!files || files.length === 0) return;
+        // Drag and Drop support
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--primary)';
+            dropZone.style.background = 'var(--primary-light)';
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--border-color)';
+            dropZone.style.background = 'white';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--border-color)';
+            dropZone.style.background = 'white';
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                uploadFiles(e.dataTransfer.files);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                uploadFiles(e.target.files);
+            }
+        });
+
+        async function uploadFiles(files) {
+            const token = APIClient.getAuthToken();
+            if (!token) {
+                alert("Please log in first to upload documents.");
+                window.location.href = 'login.html';
+                return;
+            }
 
             for (const file of files) {
-                alert("AI is analyzing the document to generate a summary... This feature would connect to Llama 3 in production.");
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    dropZone.style.opacity = '0.5';
+                    const res = await APIClient.uploadDocument(formData);
+                    if (res.success) {
+                        alert(`Uploaded and processed "${file.name}" successfully! Text extracted and indexed for AI Chat.`);
+                        loadDocuments();
+                    } else {
+                        alert(`Upload failed: ${res.message}`);
+                    }
+                } catch (err) {
+                    alert(`Upload Error: ${err.message}`);
+                } finally {
+                    dropZone.style.opacity = '1';
+                }
             }
+            fileInput.value = '';
+        }
+
+        document.getElementById('logout-btn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await APIClient.logout();
+            window.location.href = 'login.html';
         });
     </script>
 </body>
 </html>
+

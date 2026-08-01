@@ -1,80 +1,197 @@
-﻿# INGRES Virtual Assistant
+﻿# 🌊 INGRES Virtual Assistant
 
-An AI-Driven Chatbot built for the Integrated Groundwater Information Retrieval System (INGRES). This application features a robust RAG (Retrieval-Augmented Generation) pipeline, document management, and an analytics dashboard.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.109.2-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248.svg?logo=mongodb)](https://www.mongodb.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+An advanced, AI-driven conversational agent engineered specifically for the **Integrated Groundwater Information Retrieval System (INGRES)**. It leverages a cutting-edge Retrieval-Augmented Generation (RAG) pipeline to provide accurate, context-aware answers regarding groundwater levels, rainfall forecasts, water quality parameters, and CGWB reports.
+
+---
+
+## 📑 Table of Contents
+1. [Live Demo](#-live-demo)
+2. [Key Features](#-key-features)
+3. [Architecture Overview](#-architecture-overview)
+4. [Tech Stack](#-tech-stack)
+5. [Prerequisites](#-prerequisites)
+6. [Environment Variables](#-environment-variables)
+7. [Local Installation](#-local-installation)
+8. [Deployment Guide](#-deployment-guide)
+9. [Project Structure](#-project-structure)
+
+---
 
 ## 🚀 Live Demo
-- **Frontend (Vercel):** [https://ingres-chatbot-git-main-shaliha123s-projects.vercel.app/](https://ingres-chatbot-git-main-shaliha123s-projects.vercel.app/)
-- **Backend API (Render):** [https://ingres-chatbot-e8yh.onrender.com/api/v1](https://ingres-chatbot-e8yh.onrender.com/api/v1)
+
+Experience the live production application here:
+
+- **Frontend Application (Vercel):** [https://ingres-chatbot-git-main-shaliha123s-projects.vercel.app/](https://ingres-chatbot-git-main-shaliha123s-projects.vercel.app/)
+- **Backend API Server (Render):** [https://ingres-chatbot-e8yh.onrender.com/api/v1/health](https://ingres-chatbot-e8yh.onrender.com/api/v1/health)
+
+---
+
+## ✨ Key Features
+
+- **🧠 Intelligent RAG Chatbot:** Combines Google Gemini LLM with vector-search retrieval for hyper-accurate, document-backed responses.
+- **📊 Real-time Analytics Dashboard:** Visualize system usage, query intent breakdown, user engagement, and LLM performance.
+- **📁 Document Management:** Admins can upload PDFs and TXT files. The system automatically chunks, embeds, and indexes them for the RAG pipeline.
+- **🔐 Secure Authentication:** Full JWT-based user authentication and role-based access control (Admin vs User).
+- **📝 Conversation History:** Secure storage of all chat transcripts, allowing users to revisit past queries.
+- **📱 Responsive UI:** A modern, sleek, enterprise-grade vanilla web interface tailored for hydrogeological data.
+
+---
+
+## 🏗 Architecture Overview
+
+\\\mermaid
+graph TD;
+    Client[Frontend: HTML/JS] -->|REST API| FastAPI[Backend: FastAPI]
+    FastAPI -->|JWT/Auth| Middleware[Security Layer]
+    Middleware --> Routers[API Routers]
+    Routers --> RAG[RAG Pipeline Engine]
+    RAG -->|Vector Search| MongoDB[(MongoDB Atlas)]
+    RAG -->|Prompt Gen| LLM[Google Gemini API]
+    Routers -->|Manage| Docs[Document Management]
+    Docs -->|Upload/Chunk| MongoDB
+\\\
 
 ---
 
 ## 🛠 Tech Stack
-- **Frontend:** Vanilla HTML5, CSS3, JavaScript
-- **Backend:** Python, FastAPI
-- **Database:** MongoDB
-- **AI / LLM:** Google Gemini API
-- **Deployment:** Vercel (Frontend) & Render (Backend)
+
+### Frontend
+- **Core:** HTML5, CSS3, Vanilla JavaScript (ES6+)
+- **Map Integration:** Leaflet.js (for geospatial data)
+- **Charting:** Chart.js (for analytics)
+- **Icons:** FontAwesome / Heroicons
+
+### Backend
+- **Framework:** Python 3.10+, FastAPI, Uvicorn
+- **AI/LLM:** Google Gemini API (via google-generativeai)
+- **Database:** MongoDB (Motor Async Driver)
+- **Security:** PyJWT, Passlib (Bcrypt)
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Prerequisites
 
-`
-.
-├── backend/
-│   ├── app/                # FastAPI application code
-│   ├── scripts/            # Database management and utility scripts
-│   ├── tests/              # E2E tests, RAG pipeline tests, and Audits
-│   └── requirements.txt    # Python dependencies
-├── frontend/               # Static UI files (HTML, JS, CSS)
-├── reports/                # Generated audit and verification markdown reports
-├── render.yaml             # Render deployment blueprint
-└── README.md               # You are here!
-`
+Before you begin, ensure you have the following installed:
+- **Python 3.10** or higher
+- **Git**
+- **MongoDB** (Local instance running on port 27017, or a MongoDB Atlas URI)
+- A **Google Gemini API Key** (Get one from [Google AI Studio](https://aistudio.google.com/))
 
 ---
 
-## 💻 Local Development Setup
+## 🔐 Environment Variables
 
-### 1. Clone the repository
+Create a .env file inside the ackend/ directory. Use the following template:
+
+\\\env
+# Database Settings
+MONGODB_URI=mongodb://localhost:27017
+DATABASE_NAME=ingres_db
+
+# AI & LLM Keys
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Security Settings
+SECRET_KEY=generate_a_secure_random_string
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Optional Firebase Config (if used)
+FIREBASE_PROJECT_ID=your_project_id
+\\\
+
+---
+
+## 💻 Local Installation
+
+### 1. Clone the Repository
 \\\ash
 git clone https://github.com/Shaliha123/INGRES-Chatbot.git
 cd INGRES-Chatbot
 \\\
 
 ### 2. Backend Setup
-Make sure you have Python 3.10+ installed.
 \\\ash
 cd backend
+
+# Create a virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Activate the virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 \\\
 
-Create a .env file in the ackend/ directory and populate your secrets:
-\\\env
-MONGODB_URI=mongodb://localhost:27017
-DATABASE_NAME=ingres_db
-GEMINI_API_KEY=your_gemini_key_here
-FIREBASE_PROJECT_ID=your_firebase_id_here
-\\\
-
-Start the local server:
+### 3. Start the Backend Server
 \\\ash
+# Run the FastAPI server via Uvicorn
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 \\\
+The API will be available at http://127.0.0.1:8000. You can view the interactive API documentation at http://127.0.0.1:8000/docs.
 
-### 3. Frontend Setup
-Since the frontend uses vanilla HTML/JS, no build step is required! 
-You can serve the rontend/ directory using any local static file server (e.g., Live Server extension in VSCode, or Python's http.server):
+### 4. Start the Frontend
+Open a new terminal window. Since the frontend is static, you just need a simple HTTP server:
 \\\ash
 cd frontend
 python -m http.server 3000
 \\\
-Open http://localhost:3000 in your browser.
+Open your browser and navigate to \http://localhost:3000\.
 
 ---
 
-## 🔒 Security
-- Production CORS is restricted strictly to the Vercel frontend URL.
-- Environment variables containing API Keys are managed securely through Render and are excluded from version control.
+## 🌍 Deployment Guide
+
+### Deploying the Backend (Render)
+1. Go to [Render](https://render.com/) and create a new **Web Service**.
+2. Connect your GitHub repository.
+3. Set the Root Directory to ackend.
+4. Build Command: pip install -r requirements.txt
+5. Start Command: gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:
+6. Add your .env variables in the Render Environment tab.
+
+### Deploying the Frontend (Vercel)
+1. Go to [Vercel](https://vercel.com/) and click **Add New Project**.
+2. Import your GitHub repository.
+3. Set the **Root Directory** to rontend.
+4. Click Deploy. Vercel will automatically serve your static files!
+
+---
+
+## 📂 Detailed Project Structure
+
+\\\	ext
+INGRES-Chatbot/
+├── backend/
+│   ├── app/
+│   │   ├── middleware/      # Auth & Logging interceptors
+│   │   ├── routers/         # API Endpoints (auth, chat, admin, docs)
+│   │   ├── schemas/         # Pydantic data validation models
+│   │   ├── services/        # Core business logic (RAG, LLM, Prompts)
+│   │   ├── config.py        # Environment variables loader
+│   │   ├── database.py      # MongoDB connection manager
+│   │   └── main.py          # FastAPI application entry point
+│   ├── scripts/             # DB migration & utility scripts
+│   ├── tests/               # E2E and Unit test suites
+│   └── requirements.txt     # Python dependencies
+├── frontend/
+│   ├── css/                 # Stylesheets & Theme
+│   ├── js/                  # API client & UI logic
+│   ├── images/              # Assets
+│   └── *.html               # View templates (dashboard, chat, admin)
+├── render.yaml              # Render IaC configuration
+└── README.md                # Project documentation
+\\\
+
+---
+
+*Built with ❤️ for the Integrated Groundwater Information Retrieval System.*

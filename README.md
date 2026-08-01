@@ -44,7 +44,7 @@ Experience the live production application here:
 
 ## 🏗 Architecture Overview
 
-\\mermaid
+```mermaid
 graph TD;
     Client[Frontend: HTML/JS] -->|REST API| FastAPI[Backend: FastAPI]
     FastAPI -->|JWT/Auth| Middleware[Security Layer]
@@ -54,7 +54,8 @@ graph TD;
     RAG -->|Prompt Gen| LLM[Google Gemini API]
     Routers -->|Manage| Docs[Document Management]
     Docs -->|Upload/Chunk| MongoDB
-\
+```
+
 ---
 
 ## 🛠 Tech Stack
@@ -85,9 +86,9 @@ Before you begin, ensure you have the following installed:
 
 ## 🔐 Environment Variables
 
-Create a \.env\ file inside the \ackend/\ directory. Use the following template:
+Create a `.env` file inside the `backend/` directory. Use the following template:
 
-\\env
+```env
 # Database Settings
 MONGODB_URI=mongodb://localhost:27017
 DATABASE_NAME=ingres_db
@@ -102,18 +103,20 @@ ACCESS_TOKEN_EXPIRE_MINUTES=1440
 
 # Optional Firebase Config (if used)
 FIREBASE_PROJECT_ID=your_project_id
-\
+```
+
 ---
 
 ## 💻 Local Installation
 
 ### 1. Clone the Repository
-\\ash
+```bash
 git clone https://github.com/Shaliha123/INGRES-Chatbot.git
 cd INGRES-Chatbot
-\
+```
+
 ### 2. Backend Setup
-\\ash
+```bash
 cd backend
 
 # Create a virtual environment
@@ -121,25 +124,28 @@ python -m venv venv
 
 # Activate the virtual environment
 # On Windows:
-venv\Scriptsctivate
+venv\Scripts\activate
 # On macOS/Linux:
 source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-\
+```
+
 ### 3. Start the Backend Server
-\\ash
+```bash
 # Run the FastAPI server via Uvicorn
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
-\The API will be available at \http://127.0.0.1:8000\. You can view the interactive API documentation at \http://127.0.0.1:8000/docs\.
+```
+The API will be available at `http://127.0.0.1:8000`. You can view the interactive API documentation at `http://127.0.0.1:8000/docs`.
 
 ### 4. Start the Frontend
 Open a new terminal window. Since the frontend is static, you just need a simple HTTP server:
-\\ash
+```bash
 cd frontend
 python -m http.server 3000
-\Open your browser and navigate to \http://localhost:3000\.
+```
+Open your browser and navigate to `http://localhost:3000`.
 
 ---
 
@@ -148,21 +154,22 @@ python -m http.server 3000
 ### Deploying the Backend (Render)
 1. Go to [Render](https://render.com/) and create a new **Web Service**.
 2. Connect your GitHub repository.
-3. Set the Root Directory to \ackend\.
-4. Build Command: \pip install -r requirements.txt5. Start Command: \gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:\
-6. Add your \.env\ variables in the Render Environment tab.
+3. Set the Root Directory to `backend`.
+4. Build Command: `pip install -r requirements.txt`
+5. Start Command: `gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT`
+6. Add your `.env` variables in the Render Environment tab.
 
 ### Deploying the Frontend (Vercel)
 1. Go to [Vercel](https://vercel.com/) and click **Add New Project**.
 2. Import your GitHub repository.
-3. Set the **Root Directory** to \rontend\.
+3. Set the **Root Directory** to `frontend`.
 4. Click Deploy. Vercel will automatically serve your static files!
 
 ---
 
 ## 📂 Detailed Project Structure
 
-\\	ext
+```text
 INGRES-Chatbot/
 ├── backend/
 │   ├── app/
@@ -183,7 +190,8 @@ INGRES-Chatbot/
 │   └── *.html               # View templates (dashboard, chat, admin)
 ├── render.yaml              # Render IaC configuration
 └── README.md                # Project documentation
-\
+```
+
 ---
 
 *Built with ❤️ for the Integrated Groundwater Information Retrieval System.*
